@@ -1,0 +1,2479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWLR Jal Mitra – Real-Time Groundwater Evaluation</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;
+800&family=Noto+Sans:wght@400;500;600&family=Noto+Sans+Bengali&family=Noto+Sans+
+Telugu&family=Noto+Sans+Tamil&family=Noto+Sans+Kannada&family=Noto+Sans+Malayalam&family
+=Noto+Sans+Gujarati&family=Noto+Sans+Gurmukhi&family=Noto+Sans+Oriya&family=Noto+Nastaliq+
+Urdu&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --earth: #2d5016;
+    --earth-mid: #4a7c28;
+    --earth-light: #7ab648;
+    --water: #1a6b9a;
+    --water-light: #3a9fd4;
+    --sky: #e8f4f8;
+    --wheat: #f5c842;
+    --wheat-light: #fde98a;
+    --soil: #8b5e3c;
+    --cream: #fdf8f0;
+    --text-dark: #1a2e0a;
+    --text-mid: #3d5c1a;
+    --white: #ffffff;
+    --danger: #c0392b;
+    --success: #27ae60;
+    --warning: #e67e22;
+    --shadow: 0 4px 24px rgba(45,80,22,0.13);
+    --shadow-strong: 0 8px 40px rgba(26,107,154,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Baloo 2', 'Noto Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    background: linear-gradient(135deg, var(--earth) 0%, var(--water) 100%);
+    color: var(--white);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 20px rgba(0,0,0,0.25);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 54px; height: 54px;
+    background: var(--wheat);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+
+  .logo-text h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+
+  .logo-text p {
+    font-size: 0.72rem;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+
+  .lang-switcher {
+    display: flex; gap: 8px;
+    align-items: center;
+  }
+
+  .lang-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
+  .lang-btn.active, .lang-btn:hover {
+    background: var(--wheat);
+    color: var(--earth);
+    border-color: var(--wheat);
+  }
+
+  nav {
+    background: rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+
+  .nav-inner a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 10px 18px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .nav-inner a:hover, .nav-inner a.active {
+    color: var(--wheat);
+    border-bottom-color: var(--wheat);
+    background: rgba(255,255,255,0.07);
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    background: linear-gradient(160deg, var(--earth) 0%, var(--earth-mid) 40%, var(--water) 100%);
+    color: white;
+    padding: 56px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+
+  .hero-hindi {
+    font-family: 'Tiro Devanagari Hindi', serif;
+    font-size: 1.1rem;
+    color: var(--wheat-light);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    opacity: 0.9;
+    margin-bottom: 28px;
+  }
+
+  .hero-btns {
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--wheat);
+    color: var(--earth);
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--wheat-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245,200,66,0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: white;
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    border: 2px solid rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-outline:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: white;
+  }
+
+  /* Hero stats cards */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 18px;
+    backdrop-filter: blur(8px);
+    text-align: center;
+  }
+
+  .stat-card .icon { font-size: 2rem; margin-bottom: 8px; }
+  .stat-card .value { font-size: 1.6rem; font-weight: 800; color: var(--wheat); }
+  .stat-card .label { font-size: 0.75rem; opacity: 0.8; margin-top: 3px; }
+
+  /* ---- ALERTS ---- */
+  .alerts-bar {
+    background: #fff3cd;
+    border-bottom: 2px solid var(--wheat);
+    padding: 10px 24px;
+  }
+
+  .alerts-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #7d4e00;
+  }
+
+  .alert-badge {
+    background: var(--warning);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* ---- MAIN CONTENT ---- */
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--earth);
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .section-subtitle {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    margin-bottom: 28px;
+  }
+
+  /* ---- DASHBOARD GRID ---- */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .dash-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    border-left: 5px solid var(--earth-light);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .dash-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-strong);
+  }
+
+  .dash-card.water { border-left-color: var(--water-light); }
+  .dash-card.warning { border-left-color: var(--warning); }
+  .dash-card.danger { border-left-color: var(--danger); }
+
+  .dash-card .card-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .dash-card .card-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .card-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .icon-green { background: #e8f5e9; }
+  .icon-blue { background: #e3f2fd; }
+  .icon-orange { background: #fff3e0; }
+  .icon-red { background: #fce4ec; }
+
+  .dash-card .card-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--earth);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .dash-card .card-unit {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  .trend.up { color: var(--danger); background: #fce4ec; }
+  .trend.down { color: var(--success); background: #e8f5e9; }
+  .trend.stable { color: var(--water); background: #e3f2fd; }
+
+  /* ---- WATER LEVEL CHART ---- */
+  .chart-section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .filter-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+
+  .filter-select {
+    padding: 7px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: var(--text-dark);
+    background: white;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .filter-select:focus { border-color: var(--earth-light); }
+
+  /* SVG Chart */
+  .chart-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .chart-svg {
+    width: 100%;
+    min-width: 400px;
+    height: 220px;
+  }
+
+  .chart-legend {
+    display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.78rem; color: #555;
+  }
+
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+
+  /* ---- MAP SECTION ---- */
+  .map-section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+
+  .map-container {
+    position: relative;
+    background: linear-gradient(145deg, #d4edda 0%, #cce5f5 50%, #e8f5e9 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    height: 320px;
+    border: 2px solid #dce8d4;
+  }
+
+  .map-overlay-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .map-placeholder-svg {
+    width: 100%; height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Well markers */
+  .well-marker {
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .well-marker:hover { transform: scale(1.2); }
+
+  /* ---- QUICK ACTIONS ---- */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .action-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  .action-card:hover {
+    border-color: var(--earth-light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-strong);
+  }
+
+  .action-card .action-icon {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .action-card .action-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--earth);
+    margin-bottom: 5px;
+  }
+
+  .action-card .action-desc {
+    font-size: 0.72rem;
+    color: #777;
+    line-height: 1.4;
+  }
+
+  /* ---- WATER QUALITY TABLE ---- */
+  .table-section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+
+  thead tr {
+    background: var(--earth);
+    color: white;
+  }
+
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover { background: #f8fdf5; }
+
+  tbody td {
+    padding: 11px 16px;
+    font-size: 0.83rem;
+    color: #333;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .status-safe { background: #e8f5e9; color: #2e7d32; }
+  .status-warning { background: #fff3e0; color: #e65100; }
+  .status-critical { background: #fce4ec; color: #c62828; }
+
+  /* ---- MODAL OVERLAY ---- */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 560px;
+    padding: 36px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.25s ease;
+  }
+
+  @keyframes modalIn {
+    from { transform: scale(0.93) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 18px;
+    background: #f5f5f5;
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #555;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: #e0e0e0; }
+
+  .modal h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--earth);
+    margin-bottom: 6px;
+  }
+
+  .modal .modal-subtitle {
+    font-size: 0.83rem;
+    color: #666;
+    margin-bottom: 24px;
+    font-family: 'Tiro Devanagari Hindi', serif;
+  }
+
+  /* Form styles */
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 7px;
+  }
+
+  .form-group label .hindi {
+    font-family: 'Tiro Devanagari Hindi', serif;
+    font-weight: 400;
+    color: #888;
+    font-size: 0.78rem;
+    margin-left: 6px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #d0d0d0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    background: #fafafa;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--earth-light);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(122, 182, 72, 0.15);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .form-section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--water);
+    margin: 20px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e0eff7;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--earth) 0%, var(--earth-mid) 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+  }
+
+  .btn-submit:hover {
+    background: linear-gradient(135deg, var(--earth-mid) 0%, var(--earth-light) 100%);
+    box-shadow: 0 4px 16px rgba(45,80,22,0.3);
+    transform: translateY(-1px);
+  }
+
+  .otp-row {
+    display: flex; gap: 10px;
+  }
+
+  .otp-row input { flex: 1; }
+
+  .otp-send-btn {
+    background: var(--water);
+    color: white;
+    border: none;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .otp-send-btn:hover { background: var(--water-light); }
+
+  .terms-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.78rem;
+    color: #555;
+    margin-top: 14px;
+    margin-bottom: 6px;
+  }
+
+  .terms-row input[type=checkbox] {
+    width: 16px; height: 16px;
+    margin-top: 2px;
+    accent-color: var(--earth);
+  }
+
+  /* ---- SUCCESS STATE ---- */
+  .success-state {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .success-state .success-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    animation: bounce 0.5s ease;
+  }
+
+  @keyframes bounce {
+    0% { transform: scale(0.5); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .success-state h4 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--success);
+    margin-bottom: 8px;
+  }
+
+  .success-state p {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  /* ---- TABS ---- */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: #f0f4ed;
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 22px;
+    width: fit-content;
+  }
+
+  .tab-btn {
+    padding: 8px 18px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #666;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: white;
+    color: var(--earth);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  /* ---- ADVISORY SECTION ---- */
+  .advisory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+
+  .advisory-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--earth-light);
+  }
+
+  .advisory-card.blue { border-top-color: var(--water-light); }
+  .advisory-card.wheat { border-top-color: var(--wheat); }
+
+  .advisory-card .adv-icon { font-size: 2rem; margin-bottom: 10px; }
+  .advisory-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--earth); margin-bottom: 6px; }
+  .advisory-card p { font-size: 0.78rem; color: #555; line-height: 1.6; }
+
+  .advisory-card .adv-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #e8f5e9;
+    color: var(--success);
+    font-weight: 700;
+    margin-top: 10px;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    background: var(--earth);
+    color: rgba(255,255,255,0.8);
+    padding: 36px 24px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 36px;
+  }
+
+  footer h4 { color: var(--wheat); font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+  footer p, footer a { font-size: 0.78rem; line-height: 1.7; color: rgba(255,255,255,0.75); text-decoration: none; display: block; }
+  footer a:hover { color: var(--wheat); }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 24px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ---- NOTIFICATION TOAST ---- */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--success);
+    color: white;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    z-index: 1000;
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-stats { display: none; }
+    .dashboard-grid { grid-template-columns: 1fr 1fr; }
+    .quick-actions { grid-template-columns: 1fr 1fr; }
+    .advisory-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .quick-actions { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero h2 { font-size: 1.4rem; }
+    .modal { padding: 24px; }
+  }
+
+  /* page sections */
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+
+  
+  /* ── Language Panel Overlay ── */
+  #lang-panel-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.62);
+    z-index: 9000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow-y: auto;
+  }
+  #lang-panel-overlay.open { display: flex; }
+ 
+  #lang-panel {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 740px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    animation: lpIn 0.25s ease;
+  }
+  @keyframes lpIn {
+    from { transform: scale(0.92) translateY(24px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+  }
+ 
+  /* Panel header */
+  .lp-header {
+    background: linear-gradient(135deg, #2d5016 0%, #1a6b9a 100%);
+    color: #fff;
+    padding: 22px 28px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .lp-header h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
+  .lp-header p  { font-size: 0.75rem; opacity: 0.82; line-height: 1.5; }
+ 
+  .lp-close {
+    background: rgba(255,255,255,0.18);
+    border: none;
+    color: #fff;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .lp-close:hover { background: rgba(255,255,255,0.32); }
+ 
+  /* Constitution badge */
+  .lp-constitution-badge {
+    background: #fff3cd;
+    border: 1px solid #f5c842;
+    border-radius: 8px;
+    margin: 14px 20px 0;
+    padding: 9px 14px;
+    font-size: 0.75rem;
+    color: #7d4e00;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+ 
+  /* Language grid */
+  .lp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+    gap: 10px;
+    padding: 18px 20px;
+  }
+ 
+  .lp-item {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 13px 12px;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+    position: relative;
+  }
+  .lp-item:hover {
+    border-color: #7ab648;
+    background: #f2fbe8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(74,124,40,0.15);
+  }
+  .lp-item.selected {
+    border-color: #2d5016;
+    background: #e8f5e9;
+    box-shadow: 0 2px 12px rgba(45,80,22,0.22);
+  }
+  .lp-item.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 6px; right: 8px;
+    font-size: 0.7rem;
+    color: #2d5016;
+    font-weight: 900;
+  }
+ 
+  .li-native  { display: block; font-size: 1.1rem; font-weight: 700; color: #2d5016; margin-bottom: 3px; line-height: 1.3; }
+  .li-english { display: block; font-size: 0.68rem; color: #777; }
+  .li-script  { display: block; font-size: 0.62rem; color: #bbb; margin-top: 3px; font-style: italic; }
+  .li-num     { display: block; font-size: 0.6rem; color: #ccc; margin-top: 2px; }
+ 
+  /* Panel footer */
+  .lp-footer {
+    padding: 14px 20px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #fafafa;
+    border-radius: 0 0 20px 20px;
+  }
+  .btn-lp-cancel {
+    background: #f0f0f0;
+    color: #555;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-lp-cancel:hover { background: #e0e0e0; }
+  .btn-lp-apply {
+    background: linear-gradient(135deg, #2d5016, #4a7c28);
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-lp-apply:hover {
+    box-shadow: 0 4px 16px rgba(45,80,22,0.3);
+    transform: translateY(-1px);
+  }
+ 
+  /* Header language trigger button — replaces old .lang-btn buttons */
+  .lang-trigger-btn {
+    background: rgba(255,255,255,0.16);
+    border: 1.5px solid rgba(255,255,255,0.42);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lang-trigger-btn:hover {
+    background: #f5c842;
+    color: #2d5016;
+    border-color: #f5c842;
+  }
+  .lang-trigger-btn .lbtn-flag { font-size: 1rem; }
+  .lang-trigger-btn .lbtn-arrow { font-size: 0.65rem; opacity: 0.7; }
+ 
+  /* Responsive */
+  @media (max-width: 600px) {
+    .lp-grid { grid-template-columns: repeat(2, 1fr); }
+    .lp-header { padding: 16px 18px; }
+    #lang-panel { border-radius: 16px; }
+  }
+</style>
+
+</head>
+<body>
+
+<div id="lang-panel-overlay">
+  <div id="lang-panel">
+ 
+    <div class="lp-header">
+      <div>
+        <h2>🌐 भाषा चुनें / Choose Your Language</h2>
+        <p>
+          All 22 Official Languages of India · 8th Schedule, Constitution of India<br>
+          भारतीय संविधान की आठवीं अनुसूची की सभी 22 आधिकारिक भाषाएँ
+        </p>
+      </div>
+      <button class="lp-close" onclick="closeLangPanel()" title="Close">✕</button>
+    </div>
+ 
+    <div class="lp-constitution-badge">
+      📜 Article 344 &amp; 351 — Constitution of India guarantees these 22 scheduled languages
+    </div>
+ 
+    <div class="lp-grid" id="langGrid">
+      <!-- Populated by JavaScript below -->
+    </div>
+ 
+    <div class="lp-footer">
+      <button class="btn-lp-cancel" onclick="closeLangPanel()">Cancel / रद्द करें</button>
+      <button class="btn-lp-apply" onclick="applyLanguage()">✅ Apply / लागू करें</button>
+    </div>
+ 
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-icon">💧</div>
+      <div class="logo-text">
+        <h1>JAL MITRA – DWLR Portal</h1>
+        <p>Ministry of Jal Shakti | Real-Time Groundwater Evaluation</p>
+      </div>
+    </div>
+   <button class="lang-trigger-btn" onclick="openLangPanel()" title="Change Language">
+     <span class="lbtn-flag" id="currentLangFlag">🇮🇳</span>
+       <span id="currentLangName">English</span>
+     <span class="lbtn-arrow">▾</span>
+</button>
+  </div>
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="active" onclick="showPage('dashboard', this)">🏠 Dashboard</a>
+      <a href="#" onclick="showPage('monitoring', this)">📡 Live Monitoring</a>
+      <a href="#" onclick="showPage('advisory', this)">🌾 Farmer Advisory</a>
+      <a href="#" onclick="showPage('reports', this)">📊 Reports</a>
+      <a href="#" onclick="showPage('alerts', this)">🔔 Alerts</a>
+      <a href="#" onclick="openModal('registerModal')">📝 Register</a>
+      <a href="#" onclick="openModal('loginModal')">🔐 Login</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ALERTS BAR -->
+<div class="alerts-bar">
+  <div class="alerts-inner">
+    <span class="alert-badge">⚠️ ALERT</span>
+    <span id="alertText">Groundwater level critically low in Raichur & Bidar districts. Avoid deep bore-well drilling till monsoon. | ರಾಯಚೂರು ಮತ್ತು ಬೀದರ್ ಜಿಲ್ಲೆಗಳಲ್ಲಿ ಅಂತರ್ಜಲ ಮಟ್ಟ ಕಡಿಮೆ.</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div id="hero-section">
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <h2>🌊 Real-Time Groundwater Monitoring for Every Farmer</h2>
+        <p class="hero-hindi">भूजल निगरानी – किसानों के लिए वास्तविक समय डेटा<br>ರೈತರಿಗಾಗಿ ನೈಜ ಸಮಯದ ಅಂತರ್ಜಲ ಮಾಹಿತಿ</p>
+        <p>Access live DWLR (Digital Water Level Recorder) data for your district. Know your groundwater depth, get irrigation advice, and plan crop seasons wisely.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="openModal('registerModal')">📝 Register Free</button>
+          <button class="btn-outline" onclick="showPage('monitoring', document.querySelector('.nav-inner a:nth-child(2)'))">📡 View Live Data</button>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="icon">📡</div>
+          <div class="value">2,847</div>
+          <div class="label">DWLR Stations Active</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">👨‍🌾</div>
+          <div class="value">4.2L</div>
+          <div class="label">Registered Farmers</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">🗺️</div>
+          <div class="value">28</div>
+          <div class="label">States Covered</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">⏱️</div>
+          <div class="value">15min</div>
+          <div class="label">Data Update Frequency</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== DASHBOARD PAGE ===== -->
+<div id="page-dashboard" class="page-section active">
+  <div class="main-content">
+    <div class="section-title">📊 District Dashboard</div>
+    <p class="section-subtitle">Real-time groundwater levels for your area | आपके क्षेत्र का भूजल स्तर</p>
+
+    <!-- Dashboard Metric Cards -->
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Current Water Level</div>
+            <div class="card-value">8.2</div>
+            <div class="card-unit">metres below ground (mbgl)</div>
+          </div>
+          <div class="card-icon icon-blue">💧</div>
+        </div>
+        <span class="trend up">↑ 0.4 m this week</span>
+      </div>
+      <div class="dash-card water">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Seasonal Trend</div>
+            <div class="card-value">-12%</div>
+            <div class="card-unit">vs last year same period</div>
+          </div>
+          <div class="card-icon icon-orange">📉</div>
+        </div>
+        <span class="trend down">Better than 2023</span>
+      </div>
+      <div class="dash-card warning">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Recharge Rate</div>
+            <div class="card-value">68</div>
+            <div class="card-unit">mm / month (est.)</div>
+          </div>
+          <div class="card-icon icon-green">🌧️</div>
+        </div>
+        <span class="trend stable">⟶ Stable</span>
+      </div>
+      <div class="dash-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">pH Level</div>
+            <div class="card-value">7.1</div>
+            <div class="card-unit">Slightly alkaline</div>
+          </div>
+          <div class="card-icon icon-green">🧪</div>
+        </div>
+        <span class="trend down">✅ Safe for irrigation</span>
+      </div>
+      <div class="dash-card water">
+        <div class="card-header">
+          <div>
+            <div class="card-title">EC (Salinity)</div>
+            <div class="card-value">1.2</div>
+            <div class="card-unit">dS/m – Moderate</div>
+          </div>
+          <div class="card-icon icon-orange">🌡️</div>
+        </div>
+        <span class="trend stable">⚠️ Avoid for salt-sensitive crops</span>
+      </div>
+      <div class="dash-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Nearest DWLR Station</div>
+            <div class="card-value">2.1</div>
+            <div class="card-unit">km away – Station #KA-047</div>
+          </div>
+          <div class="card-icon icon-blue">📍</div>
+        </div>
+        <span class="trend down">✅ Online</span>
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <div>
+          <div class="section-title" style="font-size:1.1rem; margin-bottom:2px;">📈 Water Level Trend</div>
+          <div style="font-size:0.78rem; color:#777;">जल स्तर प्रवृत्ति (mbgl – lower number = better)</div>
+        </div>
+        <div class="filter-row">
+          <select class="filter-select">
+            <option>Last 30 Days</option>
+            <option>Last 3 Months</option>
+            <option>Last Year</option>
+          </select>
+          <select class="filter-select">
+            <option>Bengaluru Rural</option>
+            <option>Raichur</option>
+            <option>Bidar</option>
+            <option>Tumkur</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <svg class="chart-svg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a6b9a" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#1a6b9a" stop-opacity="0.02"/>
+            </linearGradient>
+            <linearGradient id="lastYearGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7ab648" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#7ab648" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid lines -->
+          <line x1="60" y1="20" x2="680" y2="20" stroke="#f0f0f0" stroke-width="1"/>
+          <line x1="60" y1="60" x2="680" y2="60" stroke="#f0f0f0" stroke-width="1"/>
+          <line x1="60" y1="100" x2="680" y2="100" stroke="#f0f0f0" stroke-width="1"/>
+          <line x1="60" y1="140" x2="680" y2="140" stroke="#f0f0f0" stroke-width="1"/>
+          <line x1="60" y1="180" x2="680" y2="180" stroke="#e0e0e0" stroke-width="1"/>
+          <!-- Y Labels -->
+          <text x="50" y="24" text-anchor="end" font-size="10" fill="#999">4m</text>
+          <text x="50" y="64" text-anchor="end" font-size="10" fill="#999">6m</text>
+          <text x="50" y="104" text-anchor="end" font-size="10" fill="#999">8m</text>
+          <text x="50" y="144" text-anchor="end" font-size="10" fill="#999">10m</text>
+          <text x="50" y="184" text-anchor="end" font-size="10" fill="#999">12m</text>
+          <!-- X Labels -->
+          <text x="80" y="198" text-anchor="middle" font-size="10" fill="#999">Apr 1</text>
+          <text x="180" y="198" text-anchor="middle" font-size="10" fill="#999">Apr 8</text>
+          <text x="280" y="198" text-anchor="middle" font-size="10" fill="#999">Apr 15</text>
+          <text x="380" y="198" text-anchor="middle" font-size="10" fill="#999">Apr 22</text>
+          <text x="480" y="198" text-anchor="middle" font-size="10" fill="#999">Apr 29</text>
+          <text x="580" y="198" text-anchor="middle" font-size="10" fill="#999">May 6</text>
+          <text x="660" y="198" text-anchor="middle" font-size="10" fill="#999">Today</text>
+          <!-- Last year area -->
+          <path d="M80,70 L180,65 L280,80 L380,90 L480,95 L580,100 L660,105 L660,180 L80,180 Z" fill="url(#lastYearGrad)"/>
+          <!-- Last year line -->
+          <polyline points="80,70 180,65 280,80 380,90 480,95 580,100 660,105" fill="none" stroke="#7ab648" stroke-width="2" stroke-dasharray="5,3" opacity="0.7"/>
+          <!-- Current year area -->
+          <path d="M80,110 L180,105 L280,115 L380,120 L480,108 L580,100 L660,93 L660,180 L80,180 Z" fill="url(#waterGrad)"/>
+          <!-- Current year line -->
+          <polyline points="80,110 180,105 280,115 380,120 480,108 580,100 660,93" fill="none" stroke="#1a6b9a" stroke-width="2.5"/>
+          <!-- Data points -->
+          <circle cx="660" cy="93" r="5" fill="#1a6b9a"/>
+          <circle cx="580" cy="100" r="4" fill="#1a6b9a" opacity="0.7"/>
+        </svg>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#1a6b9a"></div>This Year (2025-26)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7ab648; opacity:0.7"></div>Last Year (2024-25)</div>
+        <div class="legend-item" style="color:#c62828;">📌 Critically low threshold: 15 mbgl</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-title">⚡ Quick Actions</div>
+    <p class="section-subtitle">जल्दी पहुंच – Quick Access for Farmers</p>
+    <div class="quick-actions">
+      <a href="#" class="action-card" onclick="openModal('reportModal')">
+        <span class="action-icon">📍</span>
+        <div class="action-title">Report Low Water</div>
+        <div class="action-desc">Flag urgent water shortage in your village</div>
+      </a>
+      <a href="#" class="action-card" onclick="showPage('advisory', null)">
+        <span class="action-icon">🌾</span>
+        <div class="action-title">Crop Advisory</div>
+        <div class="action-desc">Know which crops to grow this season</div>
+      </a>
+      <a href="#" class="action-card" onclick="openModal('smsModal')">
+        <span class="action-icon">📱</span>
+        <div class="action-title">SMS Alerts</div>
+        <div class="action-desc">Get water level alerts on your phone</div>
+      </a>
+      <a href="#" class="action-card" onclick="showPage('reports', null)">
+        <span class="action-icon">📄</span>
+        <div class="action-title">Download Report</div>
+        <div class="action-desc">Monthly/annual groundwater report PDF</div>
+      </a>
+    </div>
+
+    <!-- WATER QUALITY TABLE -->
+    <div class="section-title">🧪 Water Quality Status – Nearby Stations</div>
+    <p class="section-subtitle">नजदीकी केंद्रों की जल गुणवत्ता | ಹತ್ತಿರದ ಕೇಂದ್ರಗಳ ನೀರಿನ ಗುಣಮಟ್ಟ</p>
+    <div class="table-section">
+      <table>
+        <thead>
+          <tr>
+            <th>Station ID</th>
+            <th>Village / Taluk</th>
+            <th>Depth (mbgl)</th>
+            <th>pH</th>
+            <th>TDS (mg/L)</th>
+            <th>Nitrate</th>
+            <th>Suitability</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>KA-047</strong></td>
+            <td>Doddaballapur</td>
+            <td>8.2</td>
+            <td>7.1</td>
+            <td>480</td>
+            <td>12 mg/L</td>
+            <td><span class="status-badge status-safe">✅ Safe</span></td>
+            <td>15 min ago</td>
+          </tr>
+          <tr>
+            <td><strong>KA-052</strong></td>
+            <td>Nelamangala</td>
+            <td>11.4</td>
+            <td>7.8</td>
+            <td>820</td>
+            <td>48 mg/L</td>
+            <td><span class="status-badge status-warning">⚠️ Moderate</span></td>
+            <td>15 min ago</td>
+          </tr>
+          <tr>
+            <td><strong>KA-089</strong></td>
+            <td>Devanahalli</td>
+            <td>14.6</td>
+            <td>8.3</td>
+            <td>1240</td>
+            <td>82 mg/L</td>
+            <td><span class="status-badge status-critical">🚨 Critical</span></td>
+            <td>30 min ago</td>
+          </tr>
+          <tr>
+            <td><strong>KA-033</strong></td>
+            <td>Hoskote</td>
+            <td>9.8</td>
+            <td>7.2</td>
+            <td>560</td>
+            <td>18 mg/L</td>
+            <td><span class="status-badge status-safe">✅ Safe</span></td>
+            <td>15 min ago</td>
+          </tr>
+          <tr>
+            <td><strong>KA-071</strong></td>
+            <td>Anekal</td>
+            <td>12.1</td>
+            <td>7.6</td>
+            <td>760</td>
+            <td>35 mg/L</td>
+            <td><span class="status-badge status-warning">⚠️ Moderate</span></td>
+            <td>1 hr ago</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MONITORING PAGE ===== -->
+<div id="page-monitoring" class="page-section">
+  <div class="main-content">
+    <div class="section-title">📡 Live DWLR Station Monitoring</div>
+    <p class="section-subtitle">वास्तविक समय डेटा – Real-time data from all stations in your district</p>
+
+    <div class="filter-row" style="margin-bottom:24px;">
+      <select class="filter-select">
+        <option>Karnataka</option>
+        <option>Maharashtra</option>
+        <option>Rajasthan</option>
+        <option>Punjab</option>
+      </select>
+      <select class="filter-select">
+        <option>Bengaluru Rural</option>
+        <option>Raichur</option>
+        <option>Mysuru</option>
+        <option>Bidar</option>
+      </select>
+      <select class="filter-select">
+        <option>All Stations</option>
+        <option>Critical Only</option>
+        <option>Safe Only</option>
+      </select>
+    </div>
+
+    <!-- Map Section -->
+    <div class="map-section">
+      <div class="section-title" style="font-size:1.1rem; margin-bottom:8px;">🗺️ District Map – DWLR Stations</div>
+      <p style="font-size:0.78rem; color:#777; margin-bottom:16px;">Click on markers to view station details</p>
+      <div class="map-container">
+        <svg class="map-placeholder-svg" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background -->
+          <rect width="800" height="320" fill="#d4edda"/>
+          <!-- Terrain shapes -->
+          <ellipse cx="200" cy="180" rx="140" ry="80" fill="#c8e6c9" opacity="0.6"/>
+          <ellipse cx="500" cy="140" rx="160" ry="90" fill="#b2dfdb" opacity="0.5"/>
+          <ellipse cx="650" cy="240" rx="110" ry="70" fill="#c5e1a5" opacity="0.5"/>
+          <!-- River -->
+          <path d="M50,200 Q200,160 350,190 Q500,220 700,180" stroke="#64b5f6" stroke-width="6" fill="none" opacity="0.7"/>
+          <path d="M50,205 Q200,165 350,195 Q500,225 700,185" stroke="#42a5f5" stroke-width="3" fill="none" opacity="0.4"/>
+          <!-- Roads -->
+          <line x1="0" y1="160" x2="800" y2="160" stroke="#bdbdbd" stroke-width="2" stroke-dasharray="10,5"/>
+          <line x1="400" y1="0" x2="400" y2="320" stroke="#bdbdbd" stroke-width="2" stroke-dasharray="10,5"/>
+          <!-- District boundary -->
+          <rect x="60" y="40" width="680" height="240" rx="8" fill="none" stroke="#4a7c28" stroke-width="2" stroke-dasharray="12,6" opacity="0.6"/>
+          <!-- DWLR Well markers -->
+          <!-- Safe -->
+          <g class="well-marker" onclick="alert('Station KA-047\nDoddaballapur\nDepth: 8.2 mbgl\nStatus: SAFE\nPH: 7.1')">
+            <circle cx="150" cy="130" r="18" fill="#27ae60" opacity="0.9"/>
+            <text x="150" y="135" text-anchor="middle" font-size="14" fill="white">💧</text>
+            <text x="150" y="158" text-anchor="middle" font-size="9" fill="#1a5c2e" font-weight="bold">KA-047</text>
+          </g>
+          <!-- Safe -->
+          <g class="well-marker" onclick="alert('Station KA-033\nHoskote\nDepth: 9.8 mbgl\nStatus: SAFE\nPH: 7.2')">
+            <circle cx="580" cy="100" r="18" fill="#27ae60" opacity="0.9"/>
+            <text x="580" y="105" text-anchor="middle" font-size="14" fill="white">💧</text>
+            <text x="580" y="128" text-anchor="middle" font-size="9" fill="#1a5c2e" font-weight="bold">KA-033</text>
+          </g>
+          <!-- Warning -->
+          <g class="well-marker" onclick="alert('Station KA-052\nNelamangala\nDepth: 11.4 mbgl\nStatus: MODERATE\nPH: 7.8')">
+            <circle cx="310" cy="200" r="18" fill="#e67e22" opacity="0.9"/>
+            <text x="310" y="205" text-anchor="middle" font-size="14" fill="white">⚠️</text>
+            <text x="310" y="228" text-anchor="middle" font-size="9" fill="#7d4e00" font-weight="bold">KA-052</text>
+          </g>
+          <!-- Critical -->
+          <g class="well-marker" onclick="alert('Station KA-089\nDevanahalli\nDepth: 14.6 mbgl\nStatus: CRITICAL\nAction needed!')">
+            <circle cx="500" cy="240" r="20" fill="#c0392b" opacity="0.95"/>
+            <text x="500" y="246" text-anchor="middle" font-size="14" fill="white">🚨</text>
+            <text x="500" y="270" text-anchor="middle" font-size="9" fill="#7b241c" font-weight="bold">KA-089</text>
+          </g>
+          <!-- Warning -->
+          <g class="well-marker" onclick="alert('Station KA-071\nAnekal\nDepth: 12.1 mbgl\nStatus: MODERATE\nPH: 7.6')">
+            <circle cx="680" cy="200" r="18" fill="#e67e22" opacity="0.9"/>
+            <text x="680" y="205" text-anchor="middle" font-size="14" fill="white">⚠️</text>
+            <text x="680" y="228" text-anchor="middle" font-size="9" fill="#7d4e00" font-weight="bold">KA-071</text>
+          </g>
+          <!-- Legend -->
+          <rect x="620" y="10" width="170" height="80" rx="8" fill="white" opacity="0.9"/>
+          <circle cx="638" cy="30" r="7" fill="#27ae60"/>
+          <text x="650" y="34" font-size="10" fill="#333">Safe (≤10 mbgl)</text>
+          <circle cx="638" cy="50" r="7" fill="#e67e22"/>
+          <text x="650" y="54" font-size="10" fill="#333">Moderate (10-14)</text>
+          <circle cx="638" cy="70" r="7" fill="#c0392b"/>
+          <text x="650" y="74" font-size="10" fill="#333">Critical (>14 mbgl)</text>
+        </svg>
+      </div>
+      <p style="font-size:0.75rem; color:#999; margin-top:10px; text-align:center;">⚡ Click on any station marker to view details | Data updates every 15 minutes</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADVISORY PAGE ===== -->
+<div id="page-advisory" class="page-section">
+  <div class="main-content">
+    <div class="section-title">🌾 Farmer Crop & Water Advisory</div>
+    <p class="section-subtitle">किसान सलाह – Based on current groundwater levels in your district</p>
+
+    <div class="tabs">
+      <button class="tab-btn active">This Season</button>
+      <button class="tab-btn">Irrigation Tips</button>
+      <button class="tab-btn">Government Schemes</button>
+    </div>
+
+    <div class="advisory-grid">
+      <div class="advisory-card">
+        <div class="adv-icon">🌾</div>
+        <h4>Recommended Crops</h4>
+        <p>With current water level at 8.2 mbgl, grow millets, pulses, or drip-irrigated tomatoes. Avoid water-heavy crops like paddy or sugarcane this Kharif.</p>
+        <span class="adv-badge">✅ Suitable for your area</span>
+      </div>
+      <div class="advisory-card blue">
+        <div class="adv-icon">💦</div>
+        <h4>Irrigation Schedule</h4>
+        <p>Limit bore-well irrigation to early morning (5–8 AM). Use drip/sprinkler to save 40% water. Avoid irrigation during peak sun hours (11 AM–3 PM).</p>
+        <span class="adv-badge" style="background:#e3f2fd; color:#1565c0;">💡 Save water</span>
+      </div>
+      <div class="advisory-card wheat">
+        <div class="adv-icon">🌧️</div>
+        <h4>Monsoon Forecast</h4>
+        <p>IMD predicts normal monsoon in Karnataka (June–Sep 2026). Prepare farm ponds and recharge pits. Expected recharge: 180–220 mm.</p>
+        <span class="adv-badge" style="background:#fff9c4; color:#f57f17;">🌦️ Jun 2026 arrival</span>
+      </div>
+      <div class="advisory-card">
+        <div class="adv-icon">🚜</div>
+        <h4>Bore-well Advisory</h4>
+        <p>Do NOT drill new bore-wells in Devanahalli & Hoskote this season. Water table critically low. Wait till post-monsoon recharge (Oct–Nov 2026).</p>
+        <span class="adv-badge" style="background:#fce4ec; color:#c62828;">⛔ High-risk zone</span>
+      </div>
+      <div class="advisory-card blue">
+        <div class="adv-icon">🧑‍🤝‍🧑</div>
+        <h4>Community Recharge</h4>
+        <p>Join the Amrit Sarovar scheme. Your Gram Panchayat has 3 active check dams. Contact the local Jal Shakti officer for NREGA-funded recharge pits.</p>
+        <span class="adv-badge" style="background:#e3f2fd; color:#1565c0;">📞 Scheme available</span>
+      </div>
+      <div class="advisory-card wheat">
+        <div class="adv-icon">📱</div>
+        <h4>Helpline & SMS Service</h4>
+        <p>Call 1800-180-1551 (toll-free) for groundwater queries. Register for weekly SMS alerts in Kannada, Hindi, or English. Available 24/7.</p>
+        <span class="adv-badge" style="background:#fff9c4; color:#f57f17;">📞 Toll-free</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REPORTS PAGE ===== -->
+<div id="page-reports" class="page-section">
+  <div class="main-content">
+    <div class="section-title">📊 Reports & Data Download</div>
+    <p class="section-subtitle">रिपोर्ट डाउनलोड करें – Download official groundwater reports</p>
+
+    <div class="chart-section">
+      <table>
+        <thead>
+          <tr>
+            <th>Report Name</th>
+            <th>District</th>
+            <th>Period</th>
+            <th>Format</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Monthly Groundwater Bulletin – April 2026</td>
+            <td>Bengaluru Rural</td>
+            <td>Apr 2026</td>
+            <td>PDF</td>
+            <td><button class="btn-primary" style="padding:6px 14px; font-size:0.75rem;">⬇ Download</button></td>
+          </tr>
+          <tr>
+            <td>Pre-Monsoon Water Level Report 2026</td>
+            <td>All Karnataka</td>
+            <td>Jan–Apr 2026</td>
+            <td>PDF + Excel</td>
+            <td><button class="btn-primary" style="padding:6px 14px; font-size:0.75rem;">⬇ Download</button></td>
+          </tr>
+          <tr>
+            <td>DWLR Station Data (Raw CSV)</td>
+            <td>Select District</td>
+            <td>Custom Range</td>
+            <td>CSV</td>
+            <td><button class="btn-primary" style="padding:6px 14px; font-size:0.75rem;">⬇ Download</button></td>
+          </tr>
+          <tr>
+            <td>Annual Groundwater Status Report 2025</td>
+            <td>All India</td>
+            <td>2025</td>
+            <td>PDF</td>
+            <td><button class="btn-primary" style="padding:6px 14px; font-size:0.75rem;">⬇ Download</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ALERTS PAGE ===== -->
+<div id="page-alerts" class="page-section">
+  <div class="main-content">
+    <div class="section-title">🔔 Groundwater Alerts</div>
+    <p class="section-subtitle">सूचनाएं – Alerts & notifications for your registered area</p>
+
+    <div class="advisory-grid">
+      <div class="advisory-card" style="border-top-color:#c0392b;">
+        <div class="adv-icon">🚨</div>
+        <h4>Critical: Devanahalli Taluk</h4>
+        <p>Station KA-089 reports 14.6 mbgl – critically low. Restrict bore-well usage. Switch to rainwater harvesting immediately.</p>
+        <span class="adv-badge" style="background:#fce4ec; color:#c62828;">🔴 Issued: May 10, 2026</span>
+      </div>
+      <div class="advisory-card" style="border-top-color:#e67e22;">
+        <div class="adv-icon">⚠️</div>
+        <h4>Warning: Nelamangala</h4>
+        <p>Nitrate levels elevated (48 mg/L). Do not use groundwater for drinking. Use it only for irrigation until further notice.</p>
+        <span class="adv-badge" style="background:#fff3e0; color:#e65100;">🟡 Issued: May 8, 2026</span>
+      </div>
+      <div class="advisory-card" style="border-top-color:#27ae60;">
+        <div class="adv-icon">✅</div>
+        <h4>Update: Hoskote – Improved</h4>
+        <p>Water levels recovered by 1.2 m after check-dam construction. Bore-well drilling restrictions lifted as of April 30, 2026.</p>
+        <span class="adv-badge">🟢 Issued: May 1, 2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- REGISTRATION MODAL -->
+<!-- ============================================================ -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h3>📝 Farmer Registration</h3>
+    <p class="modal-subtitle">किसान पंजीकरण – Register to access real-time groundwater data for your farm</p>
+
+    <div id="regForm">
+      <!-- Personal Details -->
+      <div class="form-section-title">👤 Personal Details</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name <span class="hindi">पूरा नाम</span></label>
+          <input type="text" placeholder="e.g. Ramesh Kumar Patil" id="regName">
+        </div>
+        <div class="form-group">
+          <label>Father's Name <span class="hindi">पिता का नाम</span></label>
+          <input type="text" placeholder="e.g. Suresh Patil">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Birth <span class="hindi">जन्म तिथि</span></label>
+          <input type="date" id="regDob">
+        </div>
+        <div class="form-group">
+          <label>Gender <span class="hindi">लिंग</span></label>
+          <select>
+            <option value="">Select</option>
+            <option>Male / पुरुष</option>
+            <option>Female / महिला</option>
+            <option>Other / अन्य</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Aadhaar Number <span class="hindi">आधार संख्या</span></label>
+        <input type="text" placeholder="XXXX XXXX XXXX" maxlength="14" id="regAadhaar" oninput="formatAadhaar(this)">
+      </div>
+
+      <!-- Contact Details -->
+      <div class="form-section-title">📞 Contact & Location</div>
+
+      <div class="form-group">
+        <label>Mobile Number <span class="hindi">मोबाइल नंबर</span></label>
+        <div class="otp-row">
+          <input type="tel" placeholder="+91 XXXXX XXXXX" maxlength="13" id="regPhone">
+          <button class="otp-send-btn" onclick="sendOTP()">Send OTP</button>
+        </div>
+      </div>
+
+      <div id="otpSection" style="display:none;">
+        <div class="form-group">
+          <label>Enter OTP <span class="hindi">OTP दर्ज करें</span></label>
+          <input type="text" placeholder="6-digit OTP" maxlength="6" id="regOtp">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>State <span class="hindi">राज्य</span></label>
+          <select id="regState" onchange="updateDistricts()">
+            <option value="">Select State</option>
+            <option>Karnataka</option>
+            <option>Maharashtra</option>
+            <option>Rajasthan</option>
+            <option>Punjab</option>
+            <option>Uttar Pradesh</option>
+            <option>Madhya Pradesh</option>
+            <option>Gujarat</option>
+            <option>Telangana</option>
+            <option>Andhra Pradesh</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>District <span class="hindi">जिला</span></label>
+          <select id="regDistrict">
+            <option>Select District</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Taluk / Block <span class="hindi">तालुक</span></label>
+          <input type="text" placeholder="Your Taluk">
+        </div>
+        <div class="form-group">
+          <label>Village / Gram Panchayat <span class="hindi">ग्राम</span></label>
+          <input type="text" placeholder="Village name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Pincode <span class="hindi">पिनकोड</span></label>
+        <input type="text" placeholder="6-digit pincode" maxlength="6">
+      </div>
+
+      <!-- Farm Details -->
+      <div class="form-section-title">🌾 Farm Details</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Land Area (acres) <span class="hindi">भूमि क्षेत्र</span></label>
+          <input type="number" placeholder="e.g. 5.5" min="0.1" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>Water Source <span class="hindi">जल स्रोत</span></label>
+          <select>
+            <option>Bore-well</option>
+            <option>Open Well</option>
+            <option>Canal</option>
+            <option>Rainfed</option>
+            <option>Mixed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Primary Crops Grown <span class="hindi">मुख्य फसल</span></label>
+        <input type="text" placeholder="e.g. Rice, Tomato, Ragi, Groundnut">
+      </div>
+
+      <div class="form-group">
+        <label>Bore-well Depth (feet, if applicable) <span class="hindi">बोरवेल की गहराई</span></label>
+        <input type="number" placeholder="e.g. 300" min="0">
+      </div>
+
+      <!-- Login Credentials -->
+      <div class="form-section-title">🔐 Login Credentials</div>
+
+      <div class="form-group">
+        <label>Create Password <span class="hindi">पासवर्ड बनाएं</span></label>
+        <input type="password" placeholder="At least 8 characters" id="regPass">
+      </div>
+
+      <div class="form-group">
+        <label>Confirm Password <span class="hindi">पासवर्ड की पुष्टि करें</span></label>
+        <input type="password" placeholder="Re-enter password" id="regPass2">
+      </div>
+
+      <div class="form-group">
+        <label>Preferred Language for Alerts <span class="hindi">अलर्ट भाषा</span></label>
+        <select>
+          <option>English</option>
+          <option>हिन्दी (Hindi)</option>
+          <option>ಕನ್ನಡ (Kannada)</option>
+          <option>मराठी (Marathi)</option>
+          <option>తెలుగు (Telugu)</option>
+          <option>தமிழ் (Tamil)</option>
+          <option>ਪੰਜਾਬੀ (Punjabi)</option>
+          <option>ગુજરાતી (Gujarati)</option>
+        </select>
+      </div>
+
+      <div class="terms-row">
+        <input type="checkbox" id="termsCheck">
+        <label for="termsCheck">I agree to the Terms & Conditions and give consent to share my land and water usage data with the Ministry of Jal Shakti for groundwater management. / मैं शर्तों से सहमत हूं।</label>
+      </div>
+
+      <button class="btn-submit" onclick="submitRegistration()">✅ Register Now – निःशुल्क पंजीकरण</button>
+    </div>
+
+    <div class="success-state" id="regSuccess" style="display:none;">
+      <div class="success-icon">🎉</div>
+      <h4>Registration Successful!</h4>
+      <p>Welcome to Jal Mitra! Your Farmer ID has been sent to your mobile number. You will now receive groundwater alerts for your district.<br><br>
+      <strong>पंजीकरण सफल!</strong> आपकी किसान ID आपके मोबाइल पर भेजी गई है।</p>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h3>🔐 Farmer Login</h3>
+    <p class="modal-subtitle">अपने खाते में प्रवेश करें | ಲಾಗಿನ್ ಮಾಡಿ</p>
+
+    <div class="tabs" style="margin-bottom:20px;">
+      <button class="tab-btn active">Mobile OTP</button>
+      <button class="tab-btn">Password</button>
+      <button class="tab-btn">Farmer ID</button>
+    </div>
+
+    <div class="form-group">
+      <label>Mobile Number / Farmer ID</label>
+      <div class="otp-row">
+        <input type="text" id="loginPhone" placeholder="+91 XXXXX XXXXX">
+        <button class="otp-send-btn" onclick="sendLoginOTP()">Send OTP</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>OTP <span class="hindi">OTP दर्ज करें</span></label>
+      <input type="text" id="loginOtp" placeholder="Enter 6-digit OTP">
+    </div>
+
+    <button class="btn-submit" onclick="submitLogin()">🔓 Login – लॉग इन करें</button>
+
+    <p style="text-align:center; margin-top:16px; font-size:0.8rem; color:#777;">
+      Don't have an account?
+      <a href="#" onclick="closeModal('loginModal'); openModal('registerModal')" style="color:var(--earth); font-weight:700;">Register Free</a>
+    </p>
+    <p style="text-align:center; font-size:0.78rem; color:#aaa; margin-top:8px;">
+      📞 Helpline: 1800-180-1551 (Toll Free)
+    </p>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="closeModal('reportModal')">✕</button>
+    <h3>📍 Report Water Issue</h3>
+    <p class="modal-subtitle">पानी की समस्या रिपोर्ट करें</p>
+
+    <div class="form-group">
+      <label>Issue Type</label>
+      <select>
+        <option>Bore-well dried up / बोरवेल सूख गया</option>
+        <option>Water quality problem / पानी की गुणवत्ता</option>
+        <option>Sudden water level drop</option>
+        <option>DWLR station malfunction</option>
+        <option>Other / अन्य</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Your Village / Location</label>
+      <input type="text" placeholder="Village name, Taluk">
+    </div>
+
+    <div class="form-group">
+      <label>Description <span class="hindi">विवरण</span></label>
+      <textarea rows="3" placeholder="Describe the issue briefly..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Your Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX">
+    </div>
+
+    <button class="btn-submit" onclick="submitIssueReport()">📤 Submit Report</button>
+  </div>
+</div>
+
+<!-- SMS ALERTS MODAL -->
+<div class="modal-overlay" id="smsModal">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="closeModal('smsModal')">✕</button>
+    <h3>📱 Subscribe to SMS Alerts</h3>
+    <p class="modal-subtitle">SMS अलर्ट सदस्यता – Free alerts in your language</p>
+
+    <div class="form-group">
+      <label>Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX">
+    </div>
+
+    <div class="form-group">
+      <label>Alert Language</label>
+      <select>
+        <option>English</option>
+        <option>हिन्दी</option>
+        <option>ಕನ್ನಡ</option>
+        <option>मराठी</option>
+        <option>தமிழ்</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Alert Frequency</label>
+      <select>
+        <option>Weekly Summary</option>
+        <option>Daily (monsoon season)</option>
+        <option>Critical alerts only</option>
+      </select>
+    </div>
+
+    <button class="btn-submit" onclick="submitSmsSubscription()">📲 Activate Alerts – निःशुल्क</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h4>💧 JAL MITRA – DWLR Portal</h4>
+      <p>A Government of India initiative under the Ministry of Jal Shakti and Central Ground Water Board (CGWB). Providing real-time groundwater data to farmers across India since 2019.</p>
+      <p style="margin-top:12px;">📞 Toll-Free: 1800-180-1551 | 📧 cgwb-help@nic.in</p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <a href="#">CGWB Website</a>
+      <a href="#">Data Portal</a>
+      <a href="#">Farmer Schemes</a>
+      <a href="#">District Reports</a>
+      <a href="#">Training Videos</a>
+      <a href="#">Grievance Portal</a>
+    </div>
+    <div>
+      <h4>Useful Resources</h4>
+      <a href="#">PM Krishi Sinchayee Yojana</a>
+      <a href="#">Atal Bhujal Yojana</a>
+      <a href="#">Amrit Sarovar</a>
+      <a href="#">NREGA Water Works</a>
+      <a href="#">IMD Rainfall Data</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ministry of Jal Shakti, Government of India | NIC Hosted</span>
+    <span>Last Data Sync: <strong>May 11, 2026 – 14:30 IST</strong></span>
+  </div>
+</footer>
+
+<script>
+  // Page navigation
+  function showPage(page, link) {
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('page-' + page)?.classList.add('active');
+    document.querySelectorAll('.nav-inner a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Modal
+  function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close modal on outside click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+
+  // Toast notification
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 4000);
+  }
+
+  // Aadhaar formatting
+  function formatAadhaar(input) {
+    let val = input.value.replace(/\D/g, '').substring(0, 12);
+    input.value = val.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3');
+  }
+
+  // OTP flow
+  function sendOTP() {
+    const phone = document.getElementById('regPhone').value;
+    if (phone.length < 10) {
+      alert('Please enter a valid mobile number | कृपया सही मोबाइल नंबर दर्ज करें');
+      return;
+    }
+    document.getElementById('otpSection').style.display = 'block';
+    showToast('📱 OTP sent to ' + phone);
+  }
+
+  // District population
+  function updateDistricts() {
+    const state = document.getElementById('regState').value;
+    const districtMap = {
+      'Karnataka': ['Bengaluru Rural','Bengaluru Urban','Raichur','Bidar','Mysuru','Tumkur','Kolar','Chitradurga','Dharwad','Belagavi'],
+      'Maharashtra': ['Pune','Nashik','Aurangabad','Kolhapur','Nagpur','Solapur','Jalgaon','Amravati'],
+      'Rajasthan': ['Jaipur','Jodhpur','Barmer','Bikaner','Udaipur','Kota','Ajmer','Sikar'],
+      'Punjab': ['Amritsar','Ludhiana','Jalandhar','Patiala','Bathinda','Gurdaspur'],
+      'Uttar Pradesh': ['Lucknow','Agra','Varanasi','Kanpur','Allahabad','Mathura','Meerut'],
+    };
+    const sel = document.getElementById('regDistrict');
+    sel.innerHTML = '<option>Select District</option>';
+    (districtMap[state] || []).forEach(d => {
+      const o = document.createElement('option');
+      o.textContent = d;
+      sel.appendChild(o);
+    });
+  }
+
+  // Registration
+  function submitRegistration() {
+    const name = document.getElementById('regName').value;
+    const phone = document.getElementById('regPhone').value;
+    const pass = document.getElementById('regPass').value;
+    const pass2 = document.getElementById('regPass2').value;
+    const terms = document.getElementById('termsCheck').checked;
+
+    if (!name || !phone) {
+      showToast('⚠️ Please fill in all required fields');
+      return;
+    }
+    if (pass !== pass2) {
+      showToast('⚠️ Passwords do not match | पासवर्ड मेल नहीं खाते');
+      return;
+    }
+    if (!terms) {
+      showToast('⚠️ Please accept Terms & Conditions');
+      return;
+    }
+    document.getElementById('regForm').style.display = 'none';
+    document.getElementById('regSuccess').style.display = 'block';
+  }
+
+  // Language switcher
+  function switchLang(lang) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    const alerts = {
+      en: 'Groundwater level critically low in Raichur & Bidar districts. Avoid deep bore-well drilling till monsoon.',
+      hi: 'राइचूर और बीदर जिलों में भूजल स्तर गंभीर रूप से कम है। मानसून तक गहरे बोरवेल खुदाई से बचें।',
+      kn: 'ರಾಯಚೂರು ಮತ್ತು ಬೀದರ್ ಜಿಲ್ಲೆಗಳಲ್ಲಿ ಅಂತರ್ಜಲ ಮಟ್ಟ ತೀವ್ರವಾಗಿ ಕಡಿಮೆಯಾಗಿದೆ. ಮಾನ್ಸೂನ್ ವರೆಗೆ ಕೊರೆ ಬಾವಿ ತೋಡಬೇಡಿ.'
+    };
+    document.getElementById('alertText').textContent = alerts[lang];
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tabs').forEach(tabGroup => {
+    tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+</script>
+
+<script>
+// ╔══════════════════════════════════════════════════════════╗
+// ║  22 LANGUAGES — 8th Schedule, Constitution of India     ║
+// ╚══════════════════════════════════════════════════════════╝
+const LANGUAGES = [
+  { code:'en',  native:'English',        english:'English',    script:'Latin',            num:'—'  },
+  { code:'hi',  native:'हिन्दी',          english:'Hindi',      script:'देवनागरी',          num:'1'  },
+  { code:'bn',  native:'বাংলা',           english:'Bengali',    script:'বাংলা লিপি',        num:'2'  },
+  { code:'te',  native:'తెలుగు',          english:'Telugu',     script:'తెలుగు లిపి',        num:'3'  },
+  { code:'mr',  native:'मराठी',           english:'Marathi',    script:'देवनागरी',          num:'4'  },
+  { code:'ta',  native:'தமிழ்',           english:'Tamil',      script:'தமிழ் எழுத்து',     num:'5'  },
+  { code:'ur',  native:'اردو',            english:'Urdu',       script:'نستعلیق',           num:'6'  },
+  { code:'gu',  native:'ગુજરાતી',         english:'Gujarati',   script:'ગુજરાતી લિપિ',      num:'7'  },
+  { code:'kn',  native:'ಕನ್ನಡ',           english:'Kannada',    script:'ಕನ್ನಡ ಲಿಪಿ',        num:'8'  },
+  { code:'ml',  native:'മലയാളം',          english:'Malayalam',  script:'മലയാളം ലിപി',       num:'9'  },
+  { code:'or',  native:'ଓଡ଼ିଆ',           english:'Odia',       script:'ଓଡ଼ିଆ ଲିପି',         num:'10' },
+  { code:'pa',  native:'ਪੰਜਾਬੀ',          english:'Punjabi',    script:'ਗੁਰਮੁਖੀ ਲਿਪੀ',      num:'11' },
+  { code:'as',  native:'অসমীয়া',         english:'Assamese',   script:'অসমীয়া লিপি',       num:'12' },
+  { code:'mai', native:'मैथिली',          english:'Maithili',   script:'देवनागरी / तिरहुता', num:'13' },
+  { code:'sa',  native:'संस्कृत',          english:'Sanskrit',   script:'देवनागरी',          num:'14' },
+  { code:'ks',  native:'کٲشُر',           english:'Kashmiri',   script:'شارادا / نستعلیق',  num:'15' },
+  { code:'ne',  native:'नेपाली',           english:'Nepali',     script:'देवनागरी',          num:'16' },
+  { code:'sd',  native:'سنڌي',            english:'Sindhi',     script:'خُداوادي',           num:'17' },
+  { code:'kok', native:'कोंकणी',           english:'Konkani',    script:'देवनागरी',          num:'18' },
+  { code:'mni', native:'মৈতৈলোন্',        english:'Manipuri',   script:'মৈতৈ মায়েক',        num:'19' },
+  { code:'brx', native:'बोडो',             english:'Bodo',       script:'देवनागरी',          num:'20' },
+  { code:'doi', native:'डोगरी',            english:'Dogri',      script:'देवनागरी',          num:'21' },
+  { code:'sat', native:'ᱥᱟᱱᱛᱟᱲᱤ',       english:'Santhali',   script:'ᱚᱞ ᱪᱤᱠᱤ (Ol Chiki)',num:'22' },
+];
+ 
+// ╔══════════════════════════════════════════════════════════╗
+// ║  TRANSLATION DICTIONARY — data-i18n keys               ║
+// ╚══════════════════════════════════════════════════════════╝
+// Each key maps to translations for all 22 languages.
+// Missing keys fall back to English automatically.
+const TRANSLATIONS = {
+ 
+  /* ── Site title & subtitle ── */
+  siteTitle: {
+    en:'JAL MITRA – DWLR Portal', hi:'जल मित्र – DWLR पोर्टल',
+    bn:'জল মিত্র – DWLR পোর্টাল', te:'జల్ మిత్ర – DWLR పోర్టల్',
+    mr:'जल मित्र – DWLR पोर्टल', ta:'ஜல் மித்ரா – DWLR தளம்',
+    ur:'جل متر – DWLR پورٹل', gu:'જળ મિત્ર – DWLR પોર્ટલ',
+    kn:'ಜಲ ಮಿತ್ರ – DWLR ಪೋರ್ಟಲ್', ml:'ജൽ മിത്ര – DWLR പോർട്ടൽ',
+    or:'ଜଳ ମିତ୍ର – DWLR ପୋର୍ଟାଲ', pa:'ਜਲ ਮਿੱਤਰ – DWLR ਪੋਰਟਲ',
+    as:'জল মিত্ৰ – DWLR পোৰ্টেল', mai:'जल मित्र – DWLR पोर्टल',
+    sa:'जलमित्रम् – DWLR पोर्टलम्', ks:'جل متر – DWLR پورٹل',
+    ne:'जल मित्र – DWLR पोर्टल', sd:'جل متر – DWLR پورٽل',
+    kok:'जल मित्र – DWLR पोर्टल', mni:'ꯖꯂ ꯃꯤꯇ꯭ꯔ – DWLR ꯄꯣꯔꯇꯜ',
+    brx:'जल मित्र – DWLR पर्टाल', doi:'जल मित्र – DWLR पोर्टल',
+    sat:'ᱡᱚᱞ ᱢᱤᱛᱨ – DWLR ᱯᱚᱨᱴᱟᱞ',
+  },
+ 
+  siteSubtitle: {
+    en:'Ministry of Jal Shakti | Real-Time Groundwater Evaluation',
+    hi:'जल शक्ति मंत्रालय | वास्तविक समय भूजल मूल्यांकन',
+    bn:'জল শক্তি মন্ত্রণালয় | রিয়েল-টাইম ভূগর্ভস্থ জলমূল্যায়ন',
+    te:'జల్ శక్తి మంత్రిత్వ శాఖ | రియల్-టైమ్ భూగర్భజల మూల్యాంకనం',
+    mr:'जल शक्ती मंत्रालय | रीअल-टाइम भूजल मूल्यांकन',
+    ta:'ஜல் சக்தி அமைச்சகம் | நிகழ்நேர நிலத்தடி நீர் மதிப்பீடு',
+    ur:'وزارت جل شکتی | ریئل ٹائم زیر زمین پانی کا جائزہ',
+    gu:'જળ શક્તિ મંત્રાલય | રીઅલ-ટાઇમ ભૂગર્ભ જળ મૂલ્યાંકન',
+    kn:'ಜಲ ಶಕ್ತಿ ಸಚಿವಾಲಯ | ನೈಜ-ಸಮಯ ಅಂತರ್ಜಲ ಮೌಲ್ಯಮಾಪನ',
+    ml:'ജൽ ശക്തി മന്ത്രാലയം | തൽസമയ ഭൂഗർഭജല മൂല്യനിർണ്ണയം',
+    or:'ଜଳ ଶକ୍ତି ମନ୍ତ୍ରାଳୟ | ରିଅଲ୍-ଟାଇମ୍ ଭୂଗର୍ଭ ଜଳ ମୂଲ୍ୟାଙ୍କନ',
+    pa:'ਜਲ ਸ਼ਕਤੀ ਮੰਤਰਾਲਾ | ਅਸਲ-ਸਮੇਂ ਭੂਮੀਗਤ ਜਲ ਮੁਲਾਂਕਣ',
+    as:'জল শক্তি মন্ত্ৰালয় | ৰিয়েল-টাইম ভূগৰ্ভস্থ পানী মূল্যাংকন',
+    mai:'जल शक्ति मंत्रालय | वास्तविक समय भूजल मूल्यांकन',
+    sa:'जलशक्तिमन्त्रालयः | वास्तविकसमयभूजलमूल्यांकनम्',
+    ks:'وزارتِ جل شکتی | حقیقی وقت زیرزمین پانی جائزہ',
+    ne:'जल शक्ति मन्त्रालय | वास्तविक समय भूजल मूल्यांकन',
+    sd:'جل شڪتي وزارت | ريل-ٽائيم زير زمين پاڻيءَ جو جائزو',
+    kok:'जल शक्ती मंत्रालय | रीअल-टाइम भूजल मूल्यांकन',
+    mni:'ꯖꯂ ꯁꯀ꯭ꯇꯤ ꯃꯤꯅꯤꯁ꯭ꯠꯔꯤ | ꯔꯤꯌꯦꯜ-ꯇꯥꯏꯝ ꯅꯩꯃꯦꯡ ꯌꯨ ꯑꯩꯈꯣꯢꯐꯝ',
+    brx:'जल शक्ति मंत्रालय | रियल-टाइम भूजल मूल्यांकन',
+    doi:'जल शक्ति मंत्रालय | असलि समें भूजल मूल्यांकन',
+    sat:'ᱡᱟᱞ ᱁ᱚᱠᱛᱤ ᱢᱚᱱᱛᱨᱟᱞᱚᱭ | ᱨᱤᱭᱟᱞ-ᱴᱟᱭᱢ ᱵᱷᱩᱜᱚᱨᱵᱷ ᱡᱟᱞ ᱢᱩᱞᱽᱭᱟᱝᱠᱚᱱ',
+  },
+ 
+  /* ── Alert bar ── */
+  alertBadge: {
+    en:'⚠️ ALERT', hi:'⚠️ चेतावनी', bn:'⚠️ সতর্কতা', te:'⚠️ హెచ్చరిక',
+    mr:'⚠️ इशारा', ta:'⚠️ எச்சரிக்கை', ur:'⚠️ خبردار', gu:'⚠️ ચેતવણી',
+    kn:'⚠️ ಎಚ್ಚರಿಕೆ', ml:'⚠️ മുന്നറിയിപ്പ്', or:'⚠️ ସତର୍କତା', pa:'⚠️ ਚੇਤਾਵਨੀ',
+    as:'⚠️ সতৰ্কতা', mai:'⚠️ चेतावनी', sa:'⚠️ सूचना', ks:'⚠️ خبردار',
+    ne:'⚠️ चेतावनी', sd:'⚠️ خبردار', kok:'⚠️ इशारो', mni:'⚠️ ꯃꯇꯦꯡ ꯄꯤꯕꯥ',
+    brx:'⚠️ सावधान', doi:'⚠️ चेतावनी', sat:'⚠️ ᱧᱮᱞᱮᱫ',
+  },
+ 
+  alertText: {
+    en:'Groundwater level critically low in Raichur & Bidar districts. Avoid deep bore-well drilling till monsoon.',
+    hi:'राइचूर और बीदर जिलों में भूजल स्तर खतरनाक रूप से कम है। मानसून तक गहरे बोरवेल की खुदाई से बचें।',
+    bn:'রাইচুর ও বিদার জেলায় ভূগর্ভস্থ জলস্তর বিপজ্জনকভাবে কম। বর্ষা পর্যন্ত গভীর বোরওয়েল খনন করবেন না।',
+    te:'రాయచూర్ మరియు బీదర్ జిల్లాలలో భూగర్భ జల స్థాయి తక్కువగా ఉంది. వర్షాకాలం వరకు లోతైన బోర్‌వెల్ తవ్వకాలు నివారించండి.',
+    mr:'रायचूर आणि बिदर जिल्ह्यांमध्ये भूजल पातळी धोकादायक आहे. मान्सूनपर्यंत खोल बोअरवेल खोदणे टाळा.',
+    ta:'ராய்ச்சூர் மற்றும் பீடார் மாவட்டங்களில் நிலத்தடி நீர் மட்டம் மிகவும் குறைவாக உள்ளது. மழைக்காலம் வரை ஆழமான துளையிடல் தவிர்க்கவும்.',
+    ur:'رائچور اور بیدر اضلاع میں زیر زمین پانی کی سطح خطرناک حد تک کم ہے۔ مانسون تک گہرے بورویل کی کھدائی سے بچیں۔',
+    gu:'રાઇચૂર અને બીડર જિલ્લાઓમાં ભૂગર્ભ જળ સ્તર ઓછું છે. ચોમાસા સુધી ઊંડા બોરવેલ ખોદવાનું ટાળો.',
+    kn:'ರಾಯಚೂರು ಮತ್ತು ಬೀದರ್ ಜಿಲ್ಲೆಗಳಲ್ಲಿ ಅಂತರ್ಜಲ ಮಟ್ಟ ತೀವ್ರವಾಗಿ ಕಡಿಮೆ. ಮಾನ್ಸೂನ್ ವರೆಗೆ ಕೊರೆ ಬಾವಿ ತೋಡಬೇಡಿ.',
+    ml:'റൈച്ചൂർ, ബിദർ ജില്ലകളിൽ ഭൂഗർഭജലനിലവാരം ഗുരുതരമായി കുറഞ്ഞിരിക്കുന്നു. മഴക്കാലം വരെ ഭൂഗർഭ കിണർ കുഴിക്കുന്നത് ഒഴിവാക്കുക.',
+    or:'ରାଇଚୁର ଓ ବିଦର ଜିଲ୍ଲାରେ ଭୂଗର୍ଭ ଜଳ ସ୍ତର ଅତ୍ୟନ୍ତ ନ୍ୟୁନ। ବର୍ଷା ଯାଏ ଗଭୀର ବୋରୱେଲ ଖୋଳିବା ଏଡ଼ାନ୍ତୁ।',
+    pa:'ਰਾਇਚੂਰ ਅਤੇ ਬੀਦਰ ਜ਼ਿਲਿਆਂ ਵਿੱਚ ਭੂਮੀਗਤ ਜਲ ਪੱਧਰ ਖ਼ਤਰਨਾਕ ਹੈ। ਮਾਨਸੂਨ ਤੱਕ ਡੂੰਘੇ ਬੋਰਵੈੱਲ ਖੋਦਣ ਤੋਂ ਬਚੋ।',
+    as:'ৰাইচুৰ আৰু বিদাৰ জিলাত ভূগৰ্ভস্থ পানীৰ স্তৰ অতি নিম্ন। বৰষুণলৈকে গভীৰ বোৰৱেল খনন নকৰিব।',
+    mai:'रायचूर आ बीदर जिला में भूजल स्तर खतरनाक अछि। मानसून धरि गहीर बोरवेल खुनब सं बचू।',
+    sa:'रायचूर-बीदर-जिल्लयोः भूजलस्तरः न्यूनः। वर्षाकालपर्यन्तं गहनबोरवेलखननं वर्जनीयम्।',
+    ks:'رائچور تہ بیدر ضلعہ مَنز زیرزمین پانی بہُت کم۔ مانسون تام بوَرویل کھودن بند کرو۔',
+    ne:'रायचूर र बीदर जिल्लामा भूमिगत पानी खतरनाक रूपले कम छ। मनसुनसम्म बोरवेल नखन्नुस्।',
+    sd:'رائچور ۽ بيدر ضلعن ۾ زير زمين پاڻي تمام گهٽ آهي. مانسون تائين بورويل کوٽڻ کان پرهيز ڪريو.',
+    kok:'रायचूर आणि बीदर जिल्ल्यांनी भूजल पातळी धोकादायक आसा. मान्सूनमेरेन बोरवेल करिनाका.',
+    mni:'ꯔꯥꯢꯆꯨꯔ ꯑꯃꯁꯨꯡ ꯕꯤꯗꯔꯗꯥ ꯞꯨꯛꯅꯥꯊꯥꯛꯄꯥ ꯌꯨ ꯃꯔꯨꯑꯣꯏꯕꯥ꯫ ꯃꯟꯁꯨꯟ ꯛꯌꯥꯢ ꯕꯣꯔꯋꯦꯜ ꯑꯦꯝꯕꯤꯗꯥ꯫',
+    brx:'रायचूर आर बीदर थांनायफ्रोमनि जौगाफर सिनांनाय बेसेन। मानसूननिफ्राय बोरवेल हारिखोन।',
+    doi:'रायचूर ते बीदर जिले विच भूजल बड़ा घट्ट है। मानसून तक बोरवेल दी खुदाई तों बचो।',
+    sat:'ᱨᱟᱭᱠᱩᱨ ᱟᱨ ᱵᱤᱫᱟᱨ ᱡᱤᱞᱟᱭ ᱵᱷᱩᱜᱚᱨᱵᱷ ᱡᱟᱞ ᱠᱚᱢ ᱟᱠᱟᱱᱟ᱾ ᱢᱚᱱᱥᱩᱱ ᱛᱟᱭᱚᱢ ᱵᱚᱨᱣᱮᱞ ᱠᱩᱫᱟᱹᱭ ᱟᱜᱟ᱾',
+  },
+ 
+  /* ── Hero ── */
+  heroTitle: {
+    en:'🌊 Real-Time Groundwater Monitoring for Every Farmer',
+    hi:'🌊 हर किसान के लिए वास्तविक समय भूजल निगरानी',
+    bn:'🌊 প্রতিটি কৃষকের জন্য রিয়েল-টাইম ভূগর্ভস্থ জল পর্যবেক্ষণ',
+    te:'🌊 ప్రతి రైతుకు రియల్-టైమ్ భూగర్భ జల పర్యవేక్షణ',
+    mr:'🌊 प्रत्येक शेतकऱ्यासाठी रीअल-टाइम भूजल निरीक्षण',
+    ta:'🌊 ஒவ்வொரு விவசாயிக்கும் நிகழ்நேர நிலத்தடி நீர் கண்காணிப்பு',
+    ur:'🌊 ہر کسان کے لیے ریئل ٹائم زیر زمین پانی کی نگرانی',
+    gu:'🌊 દરેક ખેડૂત માટે રીઅલ-ટાઇમ ભૂગર્ભ જળ દેખરેખ',
+    kn:'🌊 ಪ್ರತಿ ರೈತರಿಗೂ ನೈಜ-ಸಮಯ ಅಂತರ್ಜಲ ಮೇಲ್ವಿಚಾರಣೆ',
+    ml:'🌊 ഓരോ കർഷകനും തൽസമയ ഭൂഗർഭജല നിരീക്ഷണം',
+    or:'🌊 ପ୍ରତ୍ୟେକ ଚାଷୀଙ୍କ ପାଇଁ ରିଅଲ-ଟାଇମ ଭୂଗର୍ଭ ଜଳ ଅନୁଶୀଳନ',
+    pa:'🌊 ਹਰੇਕ ਕਿਸਾਨ ਲਈ ਅਸਲ-ਸਮੇਂ ਭੂਮੀਗਤ ਜਲ ਨਿਗਰਾਨੀ',
+    as:'🌊 প্ৰতিজন কৃষকৰ বাবে ৰিয়েল-টাইম ভূগৰ্ভস্থ পানী পৰ্যবেক্ষণ',
+    mai:'🌊 हर किसान लेल वास्तविक समय भूजल निगरानी',
+    sa:'🌊 प्रतिकृषकाय वास्तविकसमय-भूजलनिरीक्षणम्',
+    ks:'🌊 ہر کِسانسیتی حقیقی وقت زیرزمین پانی نظارت',
+    ne:'🌊 हर किसानका लागि वास्तविक समय भूमिगत जल निगरानी',
+    sd:'🌊 هر هاري لاءِ ريل-ٽائيم زير زمين پاڻي نظرياتي',
+    kok:'🌊 हर शेतकाऱ्यांक रीअल-टाइम भूजल निरीक्षण',
+    mni:'🌊 ꯃꯤꯑꯣꯢ ꯔꯤꯌꯦꯜ-ꯇꯥꯏꯝ ꯞꯨꯛꯅꯥꯊꯥꯛꯄꯥ ꯌꯨ ꯃꯣꯅꯤꯇꯔꯤꯡ',
+    brx:'🌊 थामफ्रोमनि जौगाफर सिनांनाय खोमखोनाय',
+    doi:'🌊 हर किसान आस्तै असलि समेँ भूजल निगरानी',
+    sat:'🌊 ᱠᱷᱚᱱ ᱠᱷᱤᱪᱽ ᱞᱟᱹᱜᱤᱫ ᱵᱷᱩᱜᱚᱨᱵᱷ ᱡᱟᱞ ᱢᱚᱱᱤᱴᱚᱨᱤᱝ',
+  },
+ 
+  heroSubtitle: {
+    en:'Real-Time Groundwater Data for Indian Farmers',
+    hi:'भूजल निगरानी – किसानों के लिए वास्तविक समय डेटा',
+    bn:'ভূগর্ভস্থ জল পর্যবেক্ষণ – কৃষকদের জন্য তথ্য',
+    te:'భూగర్భ జల పర్యవేక్షణ – రైతుల కోసం డేటా',
+    mr:'भूजल निरीक्षण – शेतकऱ्यांसाठी माहिती',
+    ta:'நிலத்தடி நீர் கண்காணிப்பு – விவசாயிகளுக்காக',
+    ur:'زیر زمین پانی نگرانی – کسانوں کے لیے',
+    gu:'ભૂગર્ભ જળ દેખરેખ – ખેડૂતો માટે',
+    kn:'ಅಂತರ್ಜಲ ಮೇಲ್ವಿಚಾರಣೆ – ರೈತರಿಗಾಗಿ',
+    ml:'ഭൂഗർഭജല നിരീക്ഷണം – കർഷകർക്ക്',
+    or:'ଭୂଗର୍ଭ ଜଳ ଅନୁଶୀଳନ – ଚାଷୀଙ୍କ ପାଇଁ',
+    pa:'ਭੂਮੀਗਤ ਜਲ ਨਿਗਰਾਨੀ – ਕਿਸਾਨਾਂ ਲਈ',
+    as:'ভূগৰ্ভস্থ পানী পৰ্যবেক্ষণ – কৃষকৰ বাবে',
+    mai:'भूजल निगरानी – किसान लेल',
+    sa:'भूजलनिरीक्षणम् – कृषकेभ्यः',
+    ks:'زیرزمین پانی نظارت – کسانوں کیتھ',
+    ne:'भूमिगत जल निगरानी – किसानका लागि',
+    sd:'زير زمين پاڻي نظرداري – هارين لاءِ',
+    kok:'भूजल निरीक्षण – शेतकाऱ्यांसाठी',
+    mni:'ꯞꯨꯛꯅꯥꯊꯥꯛꯄꯥ ꯌꯨ ꯃꯣꯅꯤꯇꯔꯤꯡ',
+    brx:'जौगाफर सिनांनाय – हावथामनि थाखो',
+    doi:'भूजल निगरानी – किसानाँ आस्तै',
+    sat:'ᱵᱷᱩᱜᱚᱨᱵᱷ ᱡᱟᱞ ᱢᱚᱱᱤᱴᱚᱨᱤᱝ – ᱠᱷᱤᱪᱽᱤᱭᱟᱹ ᱞᱟᱹᱜᱤᱫ',
+  },
+ 
+  /* ── Nav ── */
+  navDashboard:  { en:'🏠 Dashboard',        hi:'🏠 डैशबोर्ड',     bn:'🏠 ড্যাশবোর্ড',    te:'🏠 డ్యాష్‌బోర్డ్',  mr:'🏠 डॅशबोर्ड',     ta:'🏠 டாஷ்போர்டு',    ur:'🏠 ڈیش بورڈ',     gu:'🏠 ડૅશબોર્ડ',     kn:'🏠 ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',  ml:'🏠 ഡാഷ്‌ബോർഡ്',  or:'🏠 ଡ୍ୟାସ ବୋର୍ଡ',   pa:'🏠 ਡੈਸ਼ਬੋਰਡ',     as:'🏠 ডেচব\'ৰ্ড',   mai:'🏠 डैशबोर्ड',    sa:'🏠 दर्शकपट्टः',   ks:'🏠 ڈیش بورڈ',     ne:'🏠 ड्याशबोर्ड',   sd:'🏠 ڊيش بورڊ',    kok:'🏠 डॅशबोर्ड',   mni:'🏠 ꯗꯦꯁꯕꯣꯔ꯭ꯗ',  brx:'🏠 डैशबोर्ड',   doi:'🏠 डैशबोर्ड',   sat:'🏠 ᱰᱮᱥᱵᱚᱨᱰ' },
+  navMonitoring: { en:'📡 Live Monitoring',  hi:'📡 लाइव निगरानी',  bn:'📡 লাইভ পর্যবেক্ষণ', te:'📡 లైవ్ పర్యవేక్షణ', mr:'📡 लाइव्ह निरीक्षण', ta:'📡 நேரடி கண்காணிப்பு', ur:'📡 لائیو نگرانی',   gu:'📡 લાઇવ દેખરેખ',   kn:'📡 ಲೈವ್ ಮೇಲ್ವಿಚಾರಣೆ', ml:'📡 ലൈവ് നിരീക്ഷണം', or:'📡 ଲାଇଭ ନଜ଼ررکھ',  pa:'📡 ਲਾਈਵ ਨਿਗਰਾਨੀ', as:'📡 লাইভ পৰ্যবেক্ষণ', mai:'📡 लाइव निगरानी', sa:'📡 सजीवनिरीक्षणम्', ks:'📡 لائیو نگرانی',  ne:'📡 लाइभ निगरानी',  sd:'📡 لائيو نظرداري', kok:'📡 लाइव्ह निरीक्षण', mni:'📡 ꯞꯔꯤ ꯃꯣꯅꯤꯇꯔꯤꯡ', brx:'📡 लाइव निगरानी', doi:'📡 लाइव निगरानी', sat:'📡 ᱞᱟᱭᱵᱷ ᱢᱚᱱꯤᱴꯔꯤᱝ' },
+  navAdvisory:   { en:'🌾 Farmer Advisory',  hi:'🌾 किसान सलाह',    bn:'🌾 কৃষক পরামর্শ',  te:'🌾 రైతు సలహా',       mr:'🌾 शेतकरी सल्ला',  ta:'🌾 விவசாயி ஆலோசனை', ur:'🌾 کسان مشورہ',    gu:'🌾 ખેડૂત સલાહ',    kn:'🌾 ರೈತ ಸಲಹೆ',      ml:'🌾 കർഷക ഉപദേശം',  or:'🌾 ଚାଷୀ ପରାମର୍ଶ',  pa:'🌾 ਕਿਸਾਨ ਸਲਾਹ',    as:'🌾 কৃষক পৰামৰ্শ',  mai:'🌾 किसान सलाह',  sa:'🌾 कृषकपरामर्शः',  ks:'🌾 کسان مشورہ',   ne:'🌾 किसान सल्लाह',  sd:'🌾 هاري مشورو',  kok:'🌾 शेतकारी सल्लो', mni:'🌾 ꯞꯨꯛ ꯁꯜꯞꯥ',   brx:'🌾 हावथाम सावरायनाय', doi:'🌾 किसान सलाह', sat:'🌾 ᱠᱷᱤᱪᱽ ᱯᱚᱨᱟᱢᱚᱨᱥᱚ' },
+  navReports:    { en:'📊 Reports',           hi:'📊 रिपोर्ट',       bn:'📊 প্রতিবেদন',     te:'📊 నివేదికలు',       mr:'📊 अहवाल',         ta:'📊 அறிக்கைகள்',    ur:'📊 رپورٹیں',      gu:'📊 અહેવાલ',        kn:'📊 ವರದಿಗಳು',       ml:'📊 റിപ്പോർട്ടുകൾ', or:'📊 ରିପୋର୍ଟ',        pa:'📊 ਰਿਪੋਰਟਾਂ',       as:'📊 প্ৰতিবেদন',     mai:'📊 रिपोर्ट',     sa:'📊 प्रतिवेदनानि',  ks:'📊 رپورٹیں',      ne:'📊 प्रतिवेदन',     sd:'📊 رپورٽون',     kok:'📊 अहवाल',        mni:'📊 ꯔꯤꯄꯣꯔ꯭ꯇ',    brx:'📊 रिपोर्ट',     doi:'📊 रिपोर्ट',     sat:'📊 ᱨᱤᱯᱚᱨᱴ' },
+  navAlerts:     { en:'🔔 Alerts',            hi:'🔔 अलर्ट',         bn:'🔔 সতর্কতা',       te:'🔔 హెచ్చరికలు',      mr:'🔔 इशारे',         ta:'🔔 எச்சரிக்கைகள்',  ur:'🔔 الرٹس',        gu:'🔔 ચેતવણીઓ',       kn:'🔔 ಎಚ್ಚರಿಕೆಗಳು',   ml:'🔔 മുന്നറിയിപ്പുകൾ', or:'🔔 ସତର୍କତା',       pa:'🔔 ਚੇਤਾਵਨੀਆਂ',     as:'🔔 সতৰ্কতা',       mai:'🔔 अलर्ट',       sa:'🔔 सूचनाः',        ks:'🔔 الرٹس',        ne:'🔔 अलर्टहरू',      sd:'🔔 الرٽس',       kok:'🔔 इशारे',        mni:'🔔 ꯑꯦꯞꯨꯁꯟ',     brx:'🔔 अलर्ट',       doi:'🔔 अलर्ट',       sat:'🔔 ᱟᱞᱮᱨᱴ' },
+  navRegister:   { en:'📝 Register',          hi:'📝 पंजीकरण',      bn:'📝 নিবন্ধন',       te:'📝 నమోదు',           mr:'📝 नोंदणी',        ta:'📝 பதிவு',          ur:'📝 رجسٹریشن',     gu:'📝 નોંધણી',        kn:'📝 ನೋಂದಣಿ',        ml:'📝 രജിസ്ട്രേഷൻ',  or:'📝 ପଞ୍ଜୀକରଣ',      pa:'📝 ਰਜਿਸਟ੍ਰੇਸ਼ਨ',   as:'📝 পঞ্জীয়ন',      mai:'📝 पंजीकरण',     sa:'📝 पञ्जीकरणम्',   ks:'📝 رجسٹریشن',     ne:'📝 दर्ता',         sd:'📝 رجسٽريشن',    kok:'📝 नोंदणी',       mni:'📝 ꯔꯦꯖꯤꯁ꯭ꯠꯔꯦꯁꯟ', brx:'📝 रेजिस्ट्रेशन', doi:'📝 रजिस्ट्रेशन', sat:'📝 ᱨᱮᱡᱤᱥᱴ᱿ᱨᱮᱥᱚᱱ' },
+  navLogin:      { en:'🔐 Login',             hi:'🔐 लॉग इन',       bn:'🔐 লগইন',          te:'🔐 లాగిన్',          mr:'🔐 लॉग इन',        ta:'🔐 உள்நுழைவு',     ur:'🔐 لاگ ان',       gu:'🔐 લૉગ ઇન',        kn:'🔐 ಲಾಗ್ ಇನ್',      ml:'🔐 ലോഗിൻ',         or:'🔐 ଲଗ ଇନ',         pa:'🔐 ਲੌਗ ਇਨ',        as:'🔐 লগইন',          mai:'🔐 लॉग इन',      sa:'🔐 प्रवेशः',       ks:'🔐 لاگ ان',       ne:'🔐 लग इन',         sd:'🔐 لاگ ان',      kok:'🔐 लॉग इन',       mni:'🔐 ꯞꯨꯛꯅꯔꯤꯕꯥ',  brx:'🔐 लग इन',       doi:'🔐 लॉग इन',      sat:'🔐 ᱞᱚᱜ ᱤᱱ' },
+ 
+  /* ── Buttons ── */
+  btnRegisterFree: { en:'📝 Register Free', hi:'📝 निःशुल्क पंजीकरण', bn:'📝 বিনামূল্যে নিবন্ধন', te:'📝 ఉచిత నమోదు', mr:'📝 मोफत नोंदणी', ta:'📝 இலவச பதிவு', ur:'📝 مفت رجسٹریشن', gu:'📝 મફત નોંધણી', kn:'📝 ಉಚಿತ ನೋಂದಣಿ', ml:'📝 സൗജന്യ രജിസ്ട്രേഷൻ', or:'📝 ମୁଫ୍ତ ପଞ୍ଜୀକରଣ', pa:'📝 ਮੁਫ਼ਤ ਰਜਿਸਟ੍ਰੇਸ਼ਨ', as:'📝 বিনামূলীয়া পঞ্জীয়ন', mai:'📝 मुफ्त पंजीकरण', sa:'📝 निःशुल्कं पञ्जीकरणम्', ks:'📝 مفت رجسٹریشن', ne:'📝 निःशुल्क दर्ता', sd:'📝 مفت رجسٽريشن', kok:'📝 फुकट नोंदणी', mni:'📝 ꯖꯥꯟꯅꯕ ꯔꯦꯖꯤꯁ꯭ꯠꯔꯦꯁꯟ', brx:'📝 नोखोना रेजिस्ट्रेशन', doi:'📝 मुफ्त रजिस्ट्रेशन', sat:'📝 ᱢᱩᱯᱛᱤ ᱨᱮᱡᱤᱥᱴ᱿ᱨᱮᱥᱚᱱ' },
+  btnViewLive:     { en:'📡 View Live Data', hi:'📡 लाइव डेटा देखें', bn:'📡 লাইভ ডেটা দেখুন', te:'📡 లైవ్ డేటా చూడండి', mr:'📡 लाइव्ह डेटा पाहा', ta:'📡 நேரடி தரவு காண்க', ur:'📡 لائیو ڈیٹا دیکھیں', gu:'📡 લાઇવ ડેટા જુઓ', kn:'📡 ಲೈವ್ ಡೇಟಾ ವೀಕ್ಷಿಸಿ', ml:'📡 ലൈവ് ഡേറ്റ കാണുക', or:'📡 ଲାଇଭ ଡାଟା ଦେଖନ୍ତୁ', pa:'📡 ਲਾਈਵ ਡੇਟਾ ਦੇਖੋ', as:'📡 লাইভ ডেটা চাওক', mai:'📡 लाइव डेटा देखू', sa:'📡 सजीवदत्तांशं पश्यत', ks:'📡 لائیو ڈیٹا دیکھو', ne:'📡 लाइभ डेटा हेर्नुस्', sd:'📡 لائيو ڊيٽا ڏسو', kok:'📡 लाइव्ह डेटा पळयात', mni:'📡 ꯞꯔꯤ ꯗꯦꯇꯥ ꯅꯥꯛꯄꯨ', brx:'📡 लाइव डेटा नागिरनो', doi:'📡 लाइव डेटा देखो', sat:'📡 ᱞᱟᱭᱵᱷ ᱰᱮᱴᱟ ᱧᱮᱞ' },
+  btnSendOTP:      { en:'Send OTP', hi:'OTP भेजें', bn:'OTP পাঠান', te:'OTP పంపండి', mr:'OTP पाठवा', ta:'OTP அனுப்பு', ur:'OTP بھیجیں', gu:'OTP મોકલો', kn:'OTP ಕಳುಹಿಸಿ', ml:'OTP അയക്കുക', or:'OTP ପଠାନ୍ତୁ', pa:'OTP ਭੇਜੋ', as:'OTP পঠাওক', mai:'OTP पठाऊ', sa:'OTP प्रेषयतु', ks:'OTP بھیجو', ne:'OTP पठाउनुस्', sd:'OTP موڪليو', kok:'OTP धाडात', mni:'OTP ꯁꯦꯟꯗ ꯇꯧꯕꯤ', brx:'OTP पाठा', doi:'OTP भेजो', sat:'OTP ᱯᱚᱛᱷᱟᱣ' },
+  btnLogin:        { en:'🔓 Login', hi:'🔓 लॉग इन करें', bn:'🔓 লগইন করুন', te:'🔓 లాగిన్ చేయండి', mr:'🔓 लॉग इन करा', ta:'🔓 உள்நுழையுங்கள்', ur:'🔓 لاگ ان کریں', gu:'🔓 લૉગ ઇન કરો', kn:'🔓 ಲಾಗ್ ಇನ್ ಮಾಡಿ', ml:'🔓 ലോഗിൻ ചെയ്യുക', or:'🔓 ଲଗ ଇନ କରନ୍ତୁ', pa:'🔓 ਲੌਗ ਇਨ ਕਰੋ', as:'🔓 লগইন কৰক', mai:'🔓 लॉग इन करू', sa:'🔓 प्रविशतु', ks:'🔓 لاگ ان کرو', ne:'🔓 लग इन गर्नुस्', sd:'🔓 لاگ ان ڪريو', kok:'🔓 लॉग इन करात', mni:'🔓 ꯞꯨꯛꯅꯔꯤꯕꯥ', brx:'🔓 लग इन करो', doi:'🔓 लॉग इन करो', sat:'🔓 ᱞᱚᱜ ᱤᱱ ᱠᱚᱨᱚ' },
+  btnDownload:     { en:'⬇ Download', hi:'⬇ डाउनलोड', bn:'⬇ ডাউনলোড', te:'⬇ డౌన్‌లోడ్', mr:'⬇ डाउनलोड', ta:'⬇ பதிவிறக்கம்', ur:'⬇ ڈاؤن لوڈ', gu:'⬇ ડાઉનલોડ', kn:'⬇ ಡೌನ್‌ಲೋಡ್', ml:'⬇ ഡൗൺലോഡ്', or:'⬇ ଡାଉନ୍‌ଲୋଡ', pa:'⬇ ਡਾਊਨਲੋਡ', as:'⬇ ডাউনলোড', mai:'⬇ डाउनलोड', sa:'⬇ अवतरणम्', ks:'⬇ ڈاؤنلوڈ', ne:'⬇ डाउनलोड', sd:'⬇ ڊائونلوڊ', kok:'⬇ डाउनलोड', mni:'⬇ ꯗꯥꯎꯟꯞꯣꯗ', brx:'⬇ डाउनलोड', doi:'⬇ डाउनलोड', sat:'⬇ ᱰᱟᱣᱱᱞᱚᱰ' },
+ 
+  /* ── Registration form labels ── */
+  regTitle:       { en:'📝 Farmer Registration', hi:'📝 किसान पंजीकरण', bn:'📝 কৃষক নিবন্ধন', te:'📝 రైతు నమోదు', mr:'📝 शेतकरी नोंदणी', ta:'📝 விவசாயி பதிவு', ur:'📝 کسان رجسٹریشن', gu:'📝 ખેડૂત નોંધણી', kn:'📝 ರೈತ ನೋಂದಣಿ', ml:'📝 കർഷക രജിസ്ട്രേഷൻ', or:'📝 ଚାଷୀ ପଞ୍ଜୀକରଣ', pa:'📝 ਕਿਸਾਨ ਰਜਿਸਟ੍ਰੇਸ਼ਨ', as:'📝 কৃষক পঞ্জীয়ন', mai:'📝 किसान पंजीकरण', sa:'📝 कृषकपञ्जीकरणम्', ks:'📝 کسان رجسٹریشن', ne:'📝 किसान दर्ता', sd:'📝 هاري رجسٽريشن', kok:'📝 शेतकारी नोंदणी', mni:'📝 ꯞꯨꯛꯄꯥ ꯔꯦꯖꯤꯁ꯭ꯠꯔꯦꯁꯟ', brx:'📝 हावथाम रेजिस्ट्रेशन', doi:'📝 किसान रजिस्ट्रेशन', sat:'📝 ᱠᱷᱤᱪᱽ ᱨᱮᱡᱤᱥᱴ᱿ᱨᱮᱥᱚᱱ' },
+  regFullName:    { en:'Full Name', hi:'पूरा नाम', bn:'পুরো নাম', te:'పూర్తి పేరు', mr:'पूर्ण नाव', ta:'முழு பெயர்', ur:'پورا نام', gu:'પૂરું નામ', kn:'ಪೂರ್ಣ ಹೆಸರು', ml:'പൂർണ്ണ നാമം', or:'ସମ୍ପୂର୍ଣ ନାମ', pa:'ਪੂਰਾ ਨਾਮ', as:'সম্পূৰ্ণ নাম', mai:'पूरा नाम', sa:'पूर्णनाम', ks:'پورا ناو', ne:'पूरा नाम', sd:'پورو نالو', kok:'पूर्ण नांव', mni:'ꯃꯤꯑꯣꯢꯒꯤ ꯃꯤꯡ', brx:'गोनांथाम मुं', doi:'पूरा नांऽ', sat:'ᱯᱩᱨᱟ ᱧᱩᱛᱩᱢ' },
+  regMobile:      { en:'Mobile Number', hi:'मोबाइल नंबर', bn:'মোবাইল নম্বর', te:'మొబైల్ నంబర్', mr:'मोबाइल नंबर', ta:'மொபைல் எண்', ur:'موبائل نمبر', gu:'મોબાઇલ નંબર', kn:'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', ml:'മൊബൈൽ നമ്പർ', or:'ମୋବାଇଲ ନମ୍ବର', pa:'ਮੋਬਾਈਲ ਨੰਬਰ', as:'মোবাইল নম্বৰ', mai:'मोबाइल नंबर', sa:'दूरभाषाङ्कः', ks:'موبائل نمبر', ne:'मोबाइल नम्बर', sd:'موبائل نمبر', kok:'मोबाइल नंबर', mni:'ꯃꯣꯕꯥꯏꯜ ꯅꯝꯕꯔ', brx:'मोबाइल नम्बर', doi:'मोबाइल नम्बर', sat:'ᱢᱚᱵᱟᱭᱤᱞ ᱱᱚᱢᱵᱚᱨ' },
+  regState:       { en:'State', hi:'राज्य', bn:'রাজ্য', te:'రాష్ట్రం', mr:'राज्य', ta:'மாநிலம்', ur:'صوبہ', gu:'રાજ્ય', kn:'ರಾಜ್ಯ', ml:'സംസ്ഥാനം', or:'ରାଜ୍ୟ', pa:'ਰਾਜ', as:'ৰাজ্য', mai:'राज्य', sa:'राज्यम्', ks:'صوبہ', ne:'राज्य', sd:'صوبو', kok:'राज्य', mni:'ꯊꯥꯖꯥ', brx:'ब्रिगेड', doi:'सूबा', sat:'ᱨᱟᱡ' },
+  regDistrict:    { en:'District', hi:'जिला', bn:'জেলা', te:'జిల్లా', mr:'जिल्हा', ta:'மாவட்டம்', ur:'ضلع', gu:'જિલ્લો', kn:'ಜಿಲ್ಲೆ', ml:'ജില്ല', or:'ଜିଲ୍ଲା', pa:'ਜ਼ਿਲਾ', as:'জিলা', mai:'जिला', sa:'जनपदम्', ks:'ضلع', ne:'जिल्ला', sd:'ضلعو', kok:'जिल्हो', mni:'ꯖꯤꯜꯔꯥ', brx:'जिल्लाफ्रो', doi:'जिला', sat:'ᱡᱤᱞᱟ' },
+  regPassword:    { en:'Create Password', hi:'पासवर्ड बनाएं', bn:'পাসওয়ার্ড তৈরি করুন', te:'పాస్‌వర్డ్ సృష్టించండి', mr:'पासवर्ड तयार करा', ta:'கடவுச்சொல் உருவாக்கு', ur:'پاسورڈ بنائیں', gu:'પાસવર્ડ બનાવો', kn:'ಪಾಸ್‌ವರ್ಡ್ ರಚಿಸಿ', ml:'പാസ്‌വേഡ് ഉണ്ടാക്കുക', or:'ପାସୱାର୍ଡ ତିଆରି କରନ୍ତୁ', pa:'ਪਾਸਵਰਡ ਬਣਾਓ', as:'পাছৱৰ্ড তৈয়াৰ কৰক', mai:'पासवर्ड बनाउ', sa:'सङ्केतपदं रचयतु', ks:'پاسورڈ بناوو', ne:'पासवर्ड बनाउनुस्', sd:'پاسورڊ ٺاهيو', kok:'पासवर्ड तयार करात', mni:'ꯄꯥꯁꯋꯔ꯭ꯗ ꯁꯦꯡꯕꯤ', brx:'पासवर्ड बानाय', doi:'पासवर्ड बणाओ', sat:'ᱯᱟᱥᱣᱚᱨᱰ ᱵᱚᱱᱟᱣ' },
+  regTerms:       { en:'I agree to the Terms & Conditions and give consent to share my data with the Ministry of Jal Shakti.', hi:'मैं शर्तों से सहमत हूँ और जल शक्ति मंत्रालय के साथ डेटा साझा करने की सहमति देता/देती हूँ।', bn:'আমি শর্তাবলীতে সম্মত এবং জল শক্তি মন্ত্রণালয়ের সাথে ডেটা শেয়ার করতে সম্মতি দিচ্ছি।', te:'నేను నిబంధనలకు అంగీకరిస్తున్నాను మరియు జల్ శక్తి మంత్రిత్వ శాఖకు డేటా పంచుకోవడానికి అనుమతిస్తున్నాను.', mr:'मी अटी व शर्तींशी सहमत आहे आणि जल शक्ती मंत्रालयासोबत माहिती सामायिक करण्यास संमती देतो/देते.', ta:'நான் விதிமுறைகளை ஒப்புக்கொண்டு ஜல் சக்தி அமைச்சகத்திற்கு தரவை பகிர சம்மதிக்கிறேன்.', ur:'میں شرائط سے متفق ہوں اور وزارت جل شکتی کے ساتھ ڈیٹا شیئر کرنے کی اجازت دیتا/دیتی ہوں۔', gu:'હું શરતો સ્વીકારું છું અને જળ શક્તિ મંત્રાલય સાથે ડેટા શેર કરવા સંમત છું.', kn:'ನಾನು ನಿಯಮ ಮತ್ತು ಷರತ್ತುಗಳಿಗೆ ಒಪ್ಪಿಗೆ ನೀಡಿ ಜಲ ಶಕ್ತಿ ಸಚಿವಾಲಯದೊಂದಿಗೆ ದತ್ತಾಂಶ ಹಂಚಿಕೊಳ್ಳಲು ಸಮ್ಮತಿಸುತ್ತೇನೆ.', ml:'ഞാൻ നിബന്ധനകൾ സ്വീകരിക്കുകയും ജൽ ശക്തി മന്ത്രാലയവുമായി ഡേറ്റ പങ്കുവെക്കാൻ സമ്മതിക്കുകയും ചെയ്യുന്നു.', or:'ମୁଁ ସର୍ତ ଓ ନିୟମ ସ୍ୱୀକାର ଓ ଜଳ ଶକ୍ତି ମନ୍ତ୍ରାଳୟ ସହ ତଥ୍ୟ ବାଣ୍ଟିବାକୁ ରାଜି ଅଛି।', pa:'ਮੈਂ ਸ਼ਰਤਾਂ ਨਾਲ ਸਹਿਮਤ ਹਾਂ ਅਤੇ ਜਲ ਸ਼ਕਤੀ ਮੰਤਰਾਲੇ ਨਾਲ ਡੇਟਾ ਸਾਂਝਾ ਕਰਨ ਦੀ ਸਹਿਮਤੀ ਦਿੰਦਾ/ਦਿੰਦੀ ਹਾਂ।', as:'মই চৰ্তসমূহত সম্মত আৰু জল শক্তি মন্ত্ৰালয়ৰ সৈতে ডেটা ভাগ কৰিবলৈ সন্মতি দিওঁ।', mai:'हम शर्त मानैत छी आ जल शक्ति मंत्रालय संग डेटा साझा करय सहमत छी।', sa:'अहं नियमान् अनुमोदयामि जलशक्तिमन्त्रालयाय दत्तांशदानाय सम्मतिं ददामि।', ks:'مَیں شرتاں مانتا/مانتی ہوس تہ وزارتِ جل شکتی سیتی ڈیٹا ونڈنک راضی چھِس۔', ne:'म सर्त र शर्तहरूसँग सहमत छु र जल शक्ति मन्त्रालयसँग डेटा साझा गर्न सहमति दिन्छु।', sd:'مان شرطن سان متفق آهيان ۽ جل شڪتي وزارت سان ڊيٽا شيئر ڪرڻ جي اجازت ڏيان ٿو/ٿي.', kok:'हांव अटी व शर्तींक सहमत आसा आनी जल शक्ती मंत्रालया सयत डेटा वाटपाक संमती दितां.', mni:'ꯑꯩ ꯍꯥꯏꯅꯥ ꯇꯦꯔ꯭ꯃꯁ ꯑꯃꯁꯨꯡ ꯀꯟꯗꯤꯁꯟꯁ ꯁꯝꯕꯤ꯫', brx:'बि नेवसि फोरस फोरखौ मानो आरो जल शक्ति मंत्रालयखौ डेटा फालांगिनो हारि गोहो फोरो।', doi:'मैं शर्तां नाल सहमत हां ते जल शक्ति मंत्रालय नाल डेटा साझा करन दी सहमती देंदां हां।', sat:'᱑ᱛᱮ ᱱᱤᱭᱟᱢ ᱢᱟᱱ ᱠᱟᱱᱟᱢ ᱟᱨ ᱡᱟᱞ ᱁ᱚᱠᱛᱤ ᱢᱚᱱᱛᱨᱟᱞᱚᱭ ᱞᱟᱹᱜᱤᱫ ᱰᱮᱴᱟ ᱵᱟᱹᱛᱩᱡ ᱮᱢ ᱦᱚᱸ ᱢᱟᱱᱟᱣ ᱠᱟᱱᱟᱢ᱾' },
+  btnRegisterSubmit: { en:'✅ Register Now – Free', hi:'✅ अभी पंजीकरण करें – निःशुल्क', bn:'✅ এখনই নিবন্ধন করুন – বিনামূল্যে', te:'✅ ఇప్పుడు నమోదు చేసుకోండి – ఉచితం', mr:'✅ आत्ताच नोंदणी करा – मोफत', ta:'✅ இப்போதே பதிவு செய்யுங்கள் – இலவசம்', ur:'✅ ابھی رجسٹر کریں – مفت', gu:'✅ અત્યારે નોંધણી કરો – મફત', kn:'✅ ಈಗ ನೋಂದಾಯಿಸಿ – ಉಚಿತ', ml:'✅ ഇപ്പോൾ രജിസ്‌റ്റർ ചെയ്യുക – സൗജന്യം', or:'✅ ଏବେ ପଞ୍ଜୀକରଣ କରନ୍ତୁ – ମୁଫ୍ତ', pa:'✅ ਹੁਣੇ ਰਜਿਸਟਰ ਕਰੋ – ਮੁਫ਼ਤ', as:'✅ এতিয়াই পঞ্জীয়ন কৰক – বিনামূলীয়া', mai:'✅ अखन पंजीकरण करू – मुफ्त', sa:'✅ इदानीं पञ्जीकरणं कुरुत – निःशुल्कम्', ks:'✅ ابھی رجسٹر کرو – مفت', ne:'✅ अहिले दर्ता गर्नुस् – निःशुल्क', sd:'✅ هاڻي رجسٽر ڪريو – مفت', kok:'✅ आतांच नोंदणी करात – फुकट', mni:'✅ ꯁꯟꯗꯁ꯭ꯤꯕ ꯔꯦꯖꯤꯁ꯭ꯠꯔꯦꯁꯟ – ꯖꯥꯟꯅꯕ', brx:'✅ अबुव रेजिस्ट्रेशन फोरो – नोखोना', doi:'✅ हुणे रजिस्टर करो – मुफ्त', sat:'✅ ᱦᱚᱸ ᱨᱮᱡᱤᱥᱴ᱿ᱨᱮᱥᱚᱱ ᱠᱚᱨᱚ – ᱢᱩᱯᱛᱤ' },
+  regSuccessTitle: { en:'Registration Successful!', hi:'पंजीकरण सफल!', bn:'নিবন্ধন সফল!', te:'నమోదు విజయవంతమైంది!', mr:'नोंदणी यशस्वी!', ta:'பதிவு வெற்றிகரமாக முடிந்தது!', ur:'رجسٹریشن کامیاب!', gu:'નોંધણી સફળ!', kn:'ನೋಂದಣಿ ಯಶಸ್ವಿ!', ml:'രജിസ്ട്രേഷൻ വിജയകരം!', or:'ପଞ୍ଜୀକରଣ ସଫଳ!', pa:'ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲ!', as:'পঞ্জীয়ন সফল!', mai:'पंजीकरण सफल!', sa:'पञ्जीकरणं सफलम्!', ks:'رجسٹریشن کامیاب!', ne:'दर्ता सफल!', sd:'رجسٽريشن ڪامياب!', kok:'नोंदणी यशस्वी!', mni:'ꯔꯦꯖꯤꯁ꯭ꯠꯔꯦꯁꯟ ꯁꯤꯖꯤꯟꯅꯔꯦ!', brx:'रेजिस्ट्रेशन नांगौ!', doi:'रजिस्ट्रेशन सफल!', sat:'ᱨᱮᱡᱤᱥᱴ᱿ᱨᱮᱥᱚᱱ ᱥᱟᱯᱷᱚᱞ!' },
+  regSuccessMsg: { en:'Welcome to Jal Mitra! Your Farmer ID has been sent to your mobile. You will now receive groundwater alerts for your district.', hi:'जल मित्र में आपका स्वागत है! आपकी किसान ID मोबाइल पर भेजी गई है। आपको अब आपके जिले के भूजल अलर्ट मिलेंगे।', bn:'জল মিত্রে আপনাকে স্বাগতম! আপনার কৃষক আইডি মোবাইলে পাঠানো হয়েছে।', te:'జల్ మిత్రకు స్వాగతం! మీ రైతు ID మొబైల్‌కు పంపబడింది. ఇప్పుడు మీ జిల్లాకు భూగర్భ జల హెచ్చరికలు అందుతాయి.', mr:'जल मित्रात आपले स्वागत! तुमची शेतकरी ID मोबाइलवर पाठवली आहे.', ta:'ஜல் மித்ராவிற்கு வரவேற்கிறோம்! உங்கள் விவசாயி ID மொபைலில் அனுப்பப்பட்டது.', ur:'جل متر میں خوش آمدید! آپ کی کسان ID موبائل پر بھیجی گئی ہے۔', gu:'જળ મિત્રમાં આપનું સ્વાગત! તમારી ખેડૂત ID મોબાઇل પર મોકલવામાં આવી છે.', kn:'ಜಲ ಮಿತ್ರಕ್ಕೆ ಸ್ವಾಗತ! ನಿಮ್ಮ ರೈತ ID ಮೊಬೈಲ್‌ಗೆ ಕಳುಹಿಸಲಾಗಿದೆ.', ml:'ജൽ മിത്രയിൽ സ്വാഗതം! നിങ്ങളുടെ കർഷക ID മൊബൈലിൽ അയച്ചിരിക്കുന്നു.', or:'ଜଳ ମିତ୍ରରେ ସ୍ୱାଗତ! ଆପଣଙ୍କ ଚାଷୀ ID ଫୋନ‌ ପଠଣ ହୋଇଛି।', pa:'ਜਲ ਮਿੱਤਰ ਵਿੱਚ ਜੀ ਆਇਆਂ! ਤੁਹਾਡੀ ਕਿਸਾਨ ID ਮੋਬਾਈਲ ਤੇ ਭੇਜੀ ਗਈ ਹੈ।', as:'জল মিত্ৰলৈ আপোনাক স্বাগতম! আপোনাৰ কৃষক ID মোবাইলত পঠিয়া দিয়া হৈছে।', mai:'जल मित्र में स्वागत! अहाँक किसान ID मोबाइल पर पठाओल गेल।', sa:'जलमित्रे स्वागतम्! भवतः कृषकपरिचयः दूरभाषे प्रेषितः।', ks:'جل متر میں خوش آمدید! تُہاری کِسان ID موبائل پٔر پٔھِتی گیئ۔', ne:'जल मित्रमा स्वागत! तपाईंको किसान ID मोबाइलमा पठाइयो।', sd:'جل متر ۾ ڀليڪار! توهان جو هاري ID موبائل تي موڪليو ويو آهي.', kok:'जल मित्रात स्वागत! तुमची शेतकारी ID मोबाइलर धाडल्या.', mni:'ꯖꯞꯨ ꯃꯤꯇ꯭ꯔꯥꯗꯥ ꯄꯣꯛꯄꯥ ꯑꯣꯏꯔꯤ! ꯅꯩꯉꯩꯒꯤ ꯔꯦꯔ꯭ꯃꯦꯔ ID ꯃꯣꯕꯥꯏꯜꯗꯥ ꯑꯦꯃꯥ꯫', brx:'जल मित्रस दाबायफिनो! नोंखोनि किसान ID फोन सिगां पाठा गोनां।', doi:'जल मित्र विच जी आया! तुआडी किसान ID मोबाइल ते भेजी गई है।', sat:'ᱡᱟᱞ ᱢᱤᱛᱨꯥ ᱥᱮ ᱥᱮ ᱡᱚᱢ! ᱟᱯᱩᱱᱟᱜ ᱠᱷᱤᱪᱽ ID ᱢᱚᱵᱟᱭᱤᱞᱮ ᱠᱚᱠᱚᱟ᱾' },
+ 
+  /* ── Quick action labels ── */
+  qa1Title: { en:'Report Low Water',   hi:'कम पानी रिपोर्ट करें', bn:'কম জল রিপোর্ট করুন', te:'తక్కువ నీరు రిపోర్ట్', mr:'कमी पाणी कळवा',     ta:'குறைந்த நீர் புகார்', ur:'کم پانی رپورٹ کریں', gu:'ઓછું પાણી રિપોર્ટ', kn:'ಕಡಿಮೆ ನೀರು ವರದಿ', ml:'ജലക്ഷാമം റിപ്പോർട്ട്', or:'କମ ଜଳ ରିପୋର୍ଟ', pa:'ਘੱਟ ਪਾਣੀ ਰਿਪੋਰਟ', as:'কম পানী ৰিপোৰ্ট', mai:'कम पानी रिपोर्ट', sa:'न्यूनजलसूचना', ks:'کم پانی رپورٹ', ne:'कम पानी रिपोर्ट', sd:'گهٽ پاڻي رپورٽ', kok:'उणें पाणी कळयात', mni:'ꯌꯨ ꯈꯟꯅꯔꯤꯕꯥ ꯨꯁ걝 ꯔꯤꯄꯣꯔ꯭ꯇ', brx:'गोथां जौगा रिपोर्ट', doi:'घट्ट पानी रिपोर्ट', sat:'ᱠᱚᱢ ᱡᱟᱞ ᱨᱤᱯᱚᱨᱴ' },
+  qa2Title: { en:'Crop Advisory',      hi:'फसल सलाह',             bn:'ফসল পরামর্শ',        te:'పంట సలహా',           mr:'पीक सल्ला',         ta:'பயிர் ஆலோசனை',      ur:'فصل مشورہ',         gu:'પાક સlah',           kn:'ಬೆಳೆ ಸಲಹೆ',         ml:'വിള ഉപദേശം',         or:'ଫସଲ ପରାମର୍ଶ',       pa:'ਫਸਲ ਸਲਾਹ',          as:'শস্য পৰামৰ্শ',      mai:'फसल सलाह',          sa:'उपजपरामर्शः',        ks:'فصل مشورہ',         ne:'बाली सल्लाह',        sd:'فصل مشورو',         kok:'पीक सल्लो',          mni:'ꯐꯥꯎᱵ ꯁꯜꯞꯥ',      brx:'फसलि सावरायनाय',   doi:'फसल सलाह',         sat:'ᱦᱩᱰᱤᱧ ᱯᱚᱨᱟᱢᱚᱨᱥᱚ' },
+  qa3Title: { en:'SMS Alerts',         hi:'SMS अलर्ट',            bn:'SMS সতর্কতা',        te:'SMS హెచ్చరికలు',     mr:'SMS इशारे',         ta:'SMS எச்சரிக்கை',     ur:'SMS الرٹس',         gu:'SMS ચેતવણીઓ',       kn:'SMS ಎಚ್ಚರಿಕೆಗಳು',  ml:'SMS മുന്നറിയിപ്പ്',  or:'SMS ସତର୍କତା',       pa:'SMS ਚੇਤਾਵਨੀਆਂ',     as:'SMS সতৰ্কতা',       mai:'SMS अलर्ट',         sa:'SMS सूचनाः',         ks:'SMS الرٹس',         ne:'SMS अलर्ट',          sd:'SMS الرٽ',          kok:'SMS इशारे',          mni:'SMS ꯑꯦꯞꯨꯁꯟ',      brx:'SMS अलर्ट',        doi:'SMS अलर्ट',        sat:'SMS ᱟᱞᱮᱨᱴ' },
+  qa4Title: { en:'Download Report',    hi:'रिपोर्ट डाउनलोड',     bn:'রিপোর্ট ডাউনলোড',   te:'నివేదిక డౌన్‌లోడ్',  mr:'अहवाल डाउनलोड',    ta:'அறிக்கை பதிவிறக்கம்', ur:'رپورٹ ڈاؤن لوڈ',   gu:'અહેવાલ ડાઉનલોડ',    kn:'ವರದಿ ಡೌನ್‌ಲೋಡ್',   ml:'റിപ്പോർട്ട് ഡൗൺലോഡ്', or:'ରିପୋର୍ଟ ଡାଉନ୍‌ଲୋଡ', pa:'ਰਿਪੋਰਟ ਡਾਊਨਲੋਡ',   as:'ৰিপোৰ্ট ডাউনলোড',  mai:'रिपोर्ट डाउनलोड',  sa:'प्रतिवेदनावतरणम्',  ks:'رپورٹ ڈاؤنلوڈ',    ne:'प्रतिवेदन डाउनलोड', sd:'رپورٽ ڊائونلوڊ',   kok:'अहवाल डाउनलोड',    mni:'ꯔꯤꯄꯣꯔ꯭ꯇ ꯗꯥꯎꯟꯞꯣꯗ', brx:'रिपोर्ट डाउनलोड', doi:'रिपोर्ट डाउनलोड', sat:'ᱨᱤᱯᱚᱨᱴ ᱰᱟᱣᱱᱞᱚᱰ' },
+ 
+  /* ── Status badges ── */
+  statusSafe: { en:'✅ Safe', hi:'✅ सुरक्षित', bn:'✅ নিরাপদ', te:'✅ సురక్షితం', mr:'✅ सुरक्षित', ta:'✅ பாதுகாப்பானது', ur:'✅ محفوظ', gu:'✅ સુરક્ષિત', kn:'✅ ಸುರಕ್ಷಿತ', ml:'✅ സുരക്ഷിതം', or:'✅ ସୁରକ୍ଷିତ', pa:'✅ ਸੁਰੱਖਿਅਤ', as:'✅ সুৰক্ষিত', mai:'✅ सुरक्षित', sa:'✅ सुरक्षितम्', ks:'✅ محفوظ', ne:'✅ सुरक्षित', sd:'✅ محفوظ', kok:'✅ सुरक्षित', mni:'✅ ꯁꯦꯏꯐ', brx:'✅ सुरक्षित', doi:'✅ सुरक्षित', sat:'✅ ᱥᱩᱨᱚᱠᱥᱤᱛ' },
+  statusMod:  { en:'⚠️ Moderate', hi:'⚠️ मध्यम', bn:'⚠️ মাঝারি', te:'⚠️ మధ్యస్థం', mr:'⚠️ मध्यम', ta:'⚠️ மிதமான', ur:'⚠️ معتدل', gu:'⚠️ મધ્યમ', kn:'⚠️ ಮಧ್ಯಮ', ml:'⚠️ മിതമായ', or:'⚠️ ମଧ୍ୟମ', pa:'⚠️ ਦਰਮਿਆਨਾ', as:'⚠️ মধ্যমীয়া', mai:'⚠️ मध्यम', sa:'⚠️ मध्यमम्', ks:'⚠️ متوسط', ne:'⚠️ मध्यम', sd:'⚠️ معتدل', kok:'⚠️ मध्यम', mni:'⚠️ ꯃꯩꯗꯝ', brx:'⚠️ मध्यम', doi:'⚠️ दरमियाना', sat:'⚠️ ᱢᱟᱡᱷᱽᱟᱢ' },
+  statusCrit: { en:'🚨 Critical', hi:'🚨 गंभीर', bn:'🚨 সংকটজনক', te:'🚨 విమర్శనాత్మక', mr:'🚨 गंभीर', ta:'🚨 மிகவும் தீவிரம்', ur:'🚨 خطرناک', gu:'🚨 ગંભીર', kn:'🚨 ಗಂಭೀರ', ml:'🚨 ഗുരുതരം', or:'🚨 ଗୁରୁତର', pa:'🚨 ਗੰਭੀਰ', as:'🚨 গুৰুতৰ', mai:'🚨 गंभीर', sa:'🚨 गम्भीरम्', ks:'🚨 خطرناک', ne:'🚨 गम्भीर', sd:'🚨 سنگين', kok:'🚨 गंभीर', mni:'🚨 ꯀ꯭ꯔꯤꯇꯤꯀꯜ', brx:'🚨 बेसेनथाव', doi:'🚨 गंभीर', sat:'🚨 ᱜᱚᱢᱵᱷᱤᱨ' },
+};
+ 
+// ── Translation helper ──
+function t(key) {
+  const lang = window.currentLang || 'en';
+  if (!TRANSLATIONS[key]) return key;
+  return TRANSLATIONS[key][lang] || TRANSLATIONS[key]['en'] || key;
+}
+ 
+// ── State ──
+window.currentLang = 'en';
+let _pendingLang = 'en';
+ 
+// ── Build language grid ──
+function buildLangGrid() {
+  const grid = document.getElementById('langGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  LANGUAGES.forEach(lang => {
+    const div = document.createElement('div');
+    div.className = 'lp-item' + (lang.code === window.currentLang ? ' selected' : '');
+    div.dataset.code = lang.code;
+    div.innerHTML = `
+      <span class="li-native">${lang.native}</span>
+      <span class="li-english">${lang.english}</span>
+      <span class="li-script">${lang.script}</span>
+      <span class="li-num">No. ${lang.num}</span>`;
+    div.onclick = () => {
+      document.querySelectorAll('.lp-item').forEach(i => i.classList.remove('selected'));
+      div.classList.add('selected');
+      _pendingLang = lang.code;
+    };
+    grid.appendChild(div);
+  });
+}
+ 
+// ── Open / close panel ──
+function openLangPanel() {
+  _pendingLang = window.currentLang;
+  buildLangGrid();
+  document.getElementById('lang-panel-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+ 
+function closeLangPanel() {
+  document.getElementById('lang-panel-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+ 
+// ── Apply selected language ──
+function applyLanguage() {
+  window.currentLang = _pendingLang;
+  closeLangPanel();
+  applyTranslations();
+ 
+  const langObj = LANGUAGES.find(l => l.code === window.currentLang) || LANGUAGES[0];
+  const flagEl = document.getElementById('currentLangFlag');
+  const nameEl = document.getElementById('currentLangName');
+  if (flagEl) flagEl.textContent = '🌐';
+  if (nameEl) nameEl.textContent = langObj.native;
+ 
+  // hero subtitle
+  const subEl = document.querySelector('.hero-subtitle, .hero-hindi');
+  if (subEl) subEl.textContent = t('heroSubtitle');
+ 
+  // Show toast
+  if (typeof showToast === 'function') {
+    showToast('🌐 ' + langObj.native + ' – भाषा बदली गई');
+  }
+}
+ 
+// ── Apply all data-i18n attributes ──
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val !== key) el.textContent = val;
+  });
+}
+ 
+// ── Close panel on backdrop click ──
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('lang-panel-overlay');
+  if (overlay) {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeLangPanel();
+    });
+  }
+  applyTranslations(); // apply on load (English by default)
+});
+ 
+// ── Backwards-compat: old switchLang() hook is replaced ──
+function switchLang(lang) { _pendingLang = lang; applyLanguage(); }
+</script>
+
+<script src="api_connector.js"></script>
+
+</body>
+</html>
